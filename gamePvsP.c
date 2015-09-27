@@ -2,14 +2,16 @@
 #include<stdlib.h>
 
 //盤面サイズ
-#define Size 6
-
+#define Size 12
+//手数
+#define Number_of_Moves 72
 //現在の盤面
 int Current_Board[Size][Size];
 //積み重ね記憶ポインター配列
 int *Board_Pointer;
 //積み重ね記憶ポインター制御変数
-int BP0=Size-1,BP1=Size-1,BP2=Size-1,BP3=Size-1,BP4=Size-1, BP5=Size-1,BP6=Size-1;
+int BP0=Size-1,BP1=Size-1,BP2=Size-1,BP3=Size-1,BP4=Size-1, BP5=Size-1,BP6=Size-1,
+	BP7=Size-1,BP8=Size-1,BP9=Size-1,BP10=Size-1,BP11=Size-1;
 
 //盤面情報初期化
 void Initialization_Board();
@@ -25,6 +27,8 @@ int Player2_Turn(int Board[Size][Size]);
 int Game_Judge(int Judge_Point);
 //引き分け判定
 int Game_Judge_Draw();
+//手数管理変数
+int Number_of_Move_Count = 0;
 //ゲーム終了フラグ
 int Game_End_Flag = 10;//初期値-1,0,1以外制限なし
 
@@ -86,7 +90,7 @@ void Initialization_Board()
 	}
 
 	//盤番号表示
-	printf("0 1 2 3 4 5\n");
+	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
 
 }
 
@@ -176,10 +180,50 @@ int Player1_Turn(int Board[Size][Size])
 			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
 			BP5 -= 1;//積み重ねたことを意味
 			break;
+		case 6:
+			Domination_Board_Pointer = BP6;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			BP6 -= 1;//積み重ねたことを意味
+			break;
+		case 7:
+			Domination_Board_Pointer = BP7;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			BP7 -= 1;//積み重ねたことを意味
+			break;
+		case 8:
+			Domination_Board_Pointer = BP8;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			BP8 -= 1;//積み重ねたことを意味
+			break;
+		case 9:
+			Domination_Board_Pointer = BP9;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			BP9 -= 1;//積み重ねたことを意味
+			break;
+		case 10:
+			Domination_Board_Pointer = BP10;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			BP4 -= 1;//積み重ねたことを意味
+			break;
+		case 11:
+			Domination_Board_Pointer = BP11;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			BP11 -= 1;//積み重ねたことを意味
+			break;
 	}
 	
 	//盤面情報表示
 	Show_Board();
+	//手数カウント
+	Number_of_Move_Count += 1;
+	//手数カウント上限で引き分け判定
+	if(Number_of_Move_Count == Number_of_Moves)
+	{
+		//引き分け判定とする
+		Game_End_Flag = -1;
+		return;
+	}
+
 	
 	Game_Judge(0);
 }
@@ -191,7 +235,7 @@ int Player2_Turn(int Board[Size][Size])
 	int Domination_Board_Pointer;//操作するボードポインタ記憶
 	//P2がどこにおくか
 	printf("Player2:");
-	scanf("%d",&Input_Board_Number);
+	scanf("%x",&Input_Board_Number);
 
 	//スタックポインターセレクター
 	switch(Input_Board_Number)
@@ -226,11 +270,50 @@ int Player2_Turn(int Board[Size][Size])
 			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
 			BP5  -= 1;//積み重ねたことを意味
 			break;
+		case 6:
+			Domination_Board_Pointer = BP6;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
+			BP6 -= 1;//積み重ねたことを意味
+			break;
+		case 7:
+			Domination_Board_Pointer = BP7;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
+			BP7 -= 1;//積み重ねたことを意味
+			break;
+		case 8:
+			Domination_Board_Pointer = BP8;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
+			BP8 -= 1;//積み重ねたことを意味
+			break;
+		case 9:
+			Domination_Board_Pointer = BP9;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
+			BP9 -= 1;//積み重ねたことを意味
+			break;
+		case 10:
+			Domination_Board_Pointer = BP10;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
+			BP10 -= 1;//積み重ねたことを意味
+			break;
+		case 11:
+			Domination_Board_Pointer = BP11;
+			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
+			BP11 -= 1;//積み重ねたことを意味
+			break;
 	}
 
 		
 	//盤面情報表示
 	Show_Board();
+	//手数カウント
+	Number_of_Move_Count += 1;
+	//手数カウント上限で引き分け判定
+	if(Number_of_Move_Count == Number_of_Moves)
+	{
+		//引き分け判定とする
+		Game_End_Flag = -1;
+		return;
+	}
 
 	//置かれた場所を基準に勝敗判定を行う
 	Game_Judge(1);
@@ -261,7 +344,7 @@ void Show_Board()
 	}
 
 	//盤番号表示
-	printf("0 1 2 3 4 5\n");
+	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
 
 }
 
