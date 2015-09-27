@@ -145,7 +145,7 @@ int Player1_Turn(int Board[Size][Size])
 	int Domination_Board_Pointer;//操作するボードポインタ記憶
 	//P1がどこにおくか
 	printf("Player1:");
-	scanf("%d",&Input_Board_Number);
+	scanf("%x",&Input_Board_Number);
 
 	//スタックポインターセレクター
 	switch(Input_Board_Number)
@@ -200,12 +200,12 @@ int Player1_Turn(int Board[Size][Size])
 			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
 			BP9 -= 1;//積み重ねたことを意味
 			break;
-		case 10:
+		case 0x0A:
 			Domination_Board_Pointer = BP10;
 			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
-			BP4 -= 1;//積み重ねたことを意味
+			BP10 -= 1;//積み重ねたことを意味
 			break;
-		case 11:
+		case 0x0B:
 			Domination_Board_Pointer = BP11;
 			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
 			BP11 -= 1;//積み重ねたことを意味
@@ -290,12 +290,12 @@ int Player2_Turn(int Board[Size][Size])
 			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
 			BP9 -= 1;//積み重ねたことを意味
 			break;
-		case 10:
+		case 0x0A:
 			Domination_Board_Pointer = BP10;
 			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
 			BP10 -= 1;//積み重ねたことを意味
 			break;
-		case 11:
+		case 0x0B:
 			Domination_Board_Pointer = BP11;
 			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
 			BP11 -= 1;//積み重ねたことを意味
