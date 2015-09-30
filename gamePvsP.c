@@ -1,5 +1,7 @@
 ﻿#include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
+#include<ctype.h>
 
 //盤面サイズ
 #define Size 12
@@ -104,7 +106,6 @@ int Game_Start()
 	1  = P21Win
 
 	**********/
-
 	
 	//各プレイヤー行動
 	while(1)
@@ -131,7 +132,6 @@ int Game_Start()
 			return Game_End_Flag;
 		if(Game_End_Flag == 1)
 			return Game_End_Flag;
-
 	}
 
 	}
@@ -141,11 +141,28 @@ int Game_Start()
 //P1 Turn
 int Player1_Turn(int Board[Size][Size])
 {
+	char Input_Board_Number_C[256] , *error;//入力は初めここに格納後に判定eは変換不可時の返還先
 	int Input_Board_Number;
 	int Domination_Board_Pointer;//操作するボードポインタ記憶
 	//P1がどこにおくか
-	printf("Player1:");
-	scanf("%x",&Input_Board_Number);
+	//入力を確認する無効であれば再入力
+	while(1)
+	{
+		printf("Player1:");
+		//文字列として格納
+		scanf("%s",&Input_Board_Number_C);
+		//文字列を16進変換
+		Input_Board_Number = strtol(Input_Board_Number_C,&error,16);
+
+		//ここでは単純に入力を評価する
+		if(Input_Board_Number < 12  && strcmp("\0",error) == 0)
+		{
+			//条件に合えば抜ける
+			break;
+		}else{
+			printf("error\n");
+		}
+	}
 
 	//スタックポインターセレクター
 	switch(Input_Board_Number)
@@ -231,11 +248,28 @@ int Player1_Turn(int Board[Size][Size])
 //P2 Turn
 int Player2_Turn(int Board[Size][Size])
 {
+	char Input_Board_Number_C[256] , *error;//入力は初めここに格納後に判定eは変換不可時の返還先
 	int Input_Board_Number;
 	int Domination_Board_Pointer;//操作するボードポインタ記憶
 	//P2がどこにおくか
-	printf("Player2:");
-	scanf("%x",&Input_Board_Number);
+	//入力を確認する無効であれば再入力
+	while(1)
+	{
+		printf("Player2:");
+		//文字列として格納
+		scanf("%s",&Input_Board_Number_C);
+		//文字列を16進変換
+		Input_Board_Number = strtol(Input_Board_Number_C,&error,16);
+
+		//ここでは単純に入力を評価する
+		if(Input_Board_Number < 12  && strcmp("\0",error) == 0)
+		{
+			//条件に合えば抜ける
+			break;
+		}else{
+			printf("error\n");
+		}
+	}
 
 	//スタックポインターセレクター
 	switch(Input_Board_Number)
