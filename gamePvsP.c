@@ -84,7 +84,7 @@ void Initialization_Board()
 		{
 			Current_Board[i][j] = -1;
 			if(Current_Board[i][j] == -1)
-				printf("・");
+				printf(".");
 			//printf("%d",Current_Board[i][j]);
 		}
 		printf("\n");
@@ -92,7 +92,7 @@ void Initialization_Board()
 	}
 
 	//盤番号表示
-	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
+	printf("0123456789AB\n");
 
 }
 
@@ -371,14 +371,14 @@ void Show_Board()
 			{
 				printf("X");
 			}else{
-				printf("・");
+				printf(".");
 			}
 		}
 		printf("\n");
 	}
 
 	//盤番号表示
-	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
+	printf("0123456789AB\n");
 
 }
 
