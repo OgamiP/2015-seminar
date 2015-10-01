@@ -3,7 +3,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-
 #define Size 12
 
 //盤面入力関数
@@ -12,6 +11,11 @@ int Input_Board();
 void Count_Box();
 //ひとつ置いて勝利する手（盤面）を全て表示する関数.引数はどちらが先行かを示す"First"変数
 int Game_Start_Win(int which);
+//ひとつ置いたと勝利が確定する場所を探す.引数は現在白黒どちらが置くのか
+int Find_Win_Point(int which);
+
+//ゲーム終了フラグ
+int Game_End_Flag = 10;
 
 //現在の盤面を格納
 int Current_Board[Size][Size];
@@ -27,13 +31,14 @@ int P2_Number = 0;
 int First = -1;
 
 
-
 int main()
 {
 	//入力盤面について初期化処理
 	Input_Board();
 	//盤面情報より先行、後攻を判定
 	Count_Box();
+	//ゲームスタート先手情報を引数に
+	Game_Start_Win(First);
 	return 0;
 
 }
@@ -68,7 +73,7 @@ int Input_Board()
 			{
 				
 			case -1:
-				printf("・");
+				printf(".");
 				break;
 
 			case 0:
@@ -89,10 +94,9 @@ int Input_Board()
 
 	}
 
-	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
+	printf("0123456789AB\n");
 
 	//積み重ね制御変数を入力盤面に合わせる
-
 	for(i=Size-1;i>=0;i-=1)
 	{
 		if(Current_Board[i][0] == -1)
@@ -253,9 +257,361 @@ void Count_Box()
 
 }
 
-//ひとつ置いて勝利する手（盤面）を全て表示する関数.引数はどちらが先行かを示す"First"変数
+//ひとつ置いて勝利する手を全て表示する関数.引数はどちらが先行かを示す"First"変数
 int Game_Start_Win(int which)
 {
+    
+    printf("勝ち手\n");
+
+    /*************************set***************************/
+    Current_Board[BP0][0] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("0\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("0は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP0][0] = -1;//初期化
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP1][1] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("1\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("1は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP1][1] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP2][2] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("2\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("2は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP2][2] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP3][3] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("3\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("3は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP3][3] = -1;
+	/********************************************************/
+	
+	/*************************set***************************/
+    Current_Board[BP4][4] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("4\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("4は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP4][4] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP5][5] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("5\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("5は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP5][5] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP6][6] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("6\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("6は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP6][6] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP7][7] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("7\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("7は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP7][7] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP8][8] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("8\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("8は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP8][8] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP9][9] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("9\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("9は勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP9][9] = -1;
+	/********************************************************/
+
+	/*************************set***************************/
+    Current_Board[BP10][10] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("A\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("Aは勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP10][10] = -1;
+	/********************************************************/
+    
+    /*************************set***************************/
+    Current_Board[BP11][11] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
+    Find_Win_Point(which);//置いたとき勝利したかどうか
+    if(Game_End_Flag == 0 || Game_End_Flag == 1)//勝てばその位置
+	{
+	    //勝ったときその場所の番号を表示する
+	    printf("B\n");
+	    Game_End_Flag = 10;//他にも勝つ場所がある可能性があるため初期化しておく
+	}else{//置いても勝ってない
+		//printf("Bは勝ち手ではない\n");//何もない場合ここは0からｂまで表示される(暫定)
+    }
+	Current_Board[BP11][11] = -1;
+	/********************************************************/
 
 
+}
+
+//一つ置いて勝つ場所を探す
+int Find_Win_Point(int which)
+{
+    //ループ制御変数
+    int i=0,j=0;
+
+    switch(which)
+    {
+
+	case 0:
+
+			//右横方向
+			for(i=0;i<Size;i++)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i][j+1] == 0 &&Current_Board[i][j+2] == 0 &&Current_Board[i][j+3] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//左横方向
+			for(i=0;i<Size;i++)
+			{
+				for(j=Size-1;j>4;j-=1)
+				if(Current_Board[i][j] == 0 &&Current_Board[i][j-1] == 0 &&Current_Board[i][j-2] == 0 &&Current_Board[i][j-3] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=0;j<Size;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i-1][j] == 0 &&Current_Board[i-2][j] == 0 &&Current_Board[i-3][j] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=0;j<Size;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j] == 0 &&Current_Board[i+2][j] == 0 &&Current_Board[i+3][j] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//右上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i-1][j+1] == 0 &&Current_Board[i-2][j+2] == 0 &&Current_Board[i-3][j+3] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//左上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=Size-1;j>3;j-=1)
+				if(Current_Board[i][j] == 0 && Current_Board[i-1][j-1] == 0 && Current_Board[i-2][j-2] == 0 && Current_Board[i-3][j-3] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//右下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j+1] == 0 &&Current_Board[i+2][j+2] == 0 &&Current_Board[i+3][j+3] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+			//左下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=Size-1;j>Size-3;j-=1)
+				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j-1] == 0 &&Current_Board[i+2][j-2] == 0 &&Current_Board[i+3][j-3] == 0)
+				{
+					Game_End_Flag = 0;
+					return;
+				}
+			}
+
+			break;
+
+	case 1:
+
+	    
+			//右横方向
+			for(i=0;i<Size;i++)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i][j+1] == 0 &&Current_Board[i][j+2] == 0 &&Current_Board[i][j+3] == 0)
+				{
+					Game_End_Flag = 1;
+					return;
+				}
+			}
+			//左横方向
+			for(i=0;i<Size;i++)
+			{
+				for(j=Size-1;j>4;j-=1)
+				if(Current_Board[i][j] == 0 &&Current_Board[i][j-1] == 0 &&Current_Board[i][j-2] == 0 &&Current_Board[i][j-3] == 0)
+				{
+					Game_End_Flag = 1;
+					return;
+				}
+			}
+			//上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=0;j<Size;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i-1][j] == 0 &&Current_Board[i-2][j] == 0 &&Current_Board[i-3][j] == 0)
+				{
+					Game_End_Flag = 1;
+					return;
+				}
+			}
+			//下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=0;j<Size;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j] == 0 &&Current_Board[i+2][j] == 0 &&Current_Board[i+3][j] == 0)
+				{
+					Game_End_Flag = 1;
+					return;
+				}
+			}
+			//右上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i-1][j+1] == 0 &&Current_Board[i-2][j+2] == 0 &&Current_Board[i-3][j+3] == 0)
+				{
+					Game_End_Flag = 1;
+					return 1;
+				}
+			}
+			//左上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=Size-1;j>3;j-=1)
+				if(Current_Board[i][j] == 0 && Current_Board[i-1][j-1] == 0 && Current_Board[i-2][j-2] == 0 && Current_Board[i-3][j-3] == 0)
+				{
+					Game_End_Flag = 1;
+					return 1;
+				}
+			}
+			//右下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j+1] == 0 &&Current_Board[i+2][j+2] == 0 &&Current_Board[i+3][j+3] == 0)
+				{
+					Game_End_Flag = 1;
+					return 1;
+				}
+			}
+			//左下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=Size-1;j>Size-3;j-=1)
+				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j-1] == 0 &&Current_Board[i+2][j-2] == 0 &&Current_Board[i+3][j-3] == 0)
+				{
+					Game_End_Flag = 1;
+					return 1;
+				}
+			}
+
+			break;
+    }
 }
