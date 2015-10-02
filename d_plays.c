@@ -1,4 +1,4 @@
-﻿//与えた盤面に対して4つ並ぶ手を求める
+﻿//与えた盤面に対して4つ並ぶことを防ぐ手を探す
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -59,6 +59,7 @@ int Input_Board()
 	if(fp == NULL)
 	{
 		printf("盤面情報読み込み失敗");
+		exit(0);
 		return 0;
 
 	}
@@ -258,10 +259,19 @@ void Count_Box()
 }
 
 //ひとつ置いて勝利する手を全て表示する関数.引数はどちらが先行かを示す"First"変数
+//置いて勝つなら、その場所に逆の色を置けば防ぐことが可能
+//白スタートならば、黒を置いて勝つところに白を置く考え
 int Game_Start_Win(int which)
 {
-    
-    printf("勝ち手\n");
+	//置く色を逆転
+    if(which == 0)
+	{
+		which = 1;
+	}else if(which == 1){
+		which = 0;
+	}
+
+    printf("防ぎ手\n");
 
     /*************************set***************************/
     Current_Board[BP0][0] = which;//8番目の正しい位置置く(暫定)縦側を変動させる？
@@ -440,8 +450,9 @@ int Find_Win_Point(int which)
     //ループ制御変数
     int i=0,j=0;
 
-	//右横方向
 
+
+			//右横方向
 			for(i=0;i<Size;i++)
 			{
 				for(j=0;j<Size-3;j++)
@@ -521,7 +532,6 @@ int Find_Win_Point(int which)
 					return;
 				}
 			}
-
 
 
 }
