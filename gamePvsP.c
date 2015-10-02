@@ -21,12 +21,13 @@ void Initialization_Board();
 int Game_Start();
 //行動後の盤面を表示
 void Show_Board();
-//プレイヤー1行動
-int Player1_Turn(int Board[Size][Size]);
-//プレイヤー2行動
-int Player2_Turn(int Board[Size][Size]);
-//勝敗判定
-int Game_Judge(int Judge_Point);
+//各プレイヤー行動which:何色が行動するか
+int Player_Turn(int Board[Size][Size],int which);
+//現在どちらが行動しているか
+int Game_Side = 0;//0:白1:黒
+
+//勝敗判定which:どちら側の判定をするか
+int Game_Judge(int which);
 //引き分け判定
 int Game_Judge_Draw();
 //手数管理変数
@@ -45,6 +46,7 @@ int main()
 	if(Game_End_Flag == -1)
 		printf("Draw\n");
 	
+
 	if(Game_End_Flag == 0)
 		printf("Player1 Win\n");
 	
@@ -84,7 +86,7 @@ void Initialization_Board()
 		{
 			Current_Board[i][j] = -1;
 			if(Current_Board[i][j] == -1)
-				printf(".");
+				printf("・");
 			//printf("%d",Current_Board[i][j]);
 		}
 		printf("\n");
@@ -92,7 +94,7 @@ void Initialization_Board()
 	}
 
 	//盤番号表示
-	printf("0123456789AB\n");
+	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
 
 }
 
@@ -110,45 +112,53 @@ int Game_Start()
 	//各プレイヤー行動
 	while(1)
 	{
-	//P1
-	Player1_Turn(Current_Board);
-	if(Game_End_Flag != 10)
-	{
-		if(Game_End_Flag == -1)
-			return Game_End_Flag;
-		if(Game_End_Flag == 0)
-			return Game_End_Flag;
-		if(Game_End_Flag == 1)
-			return Game_End_Flag;
+	//プレイヤーの行動は次をループ勝敗判定後交代処理する
+		Player_Turn(Current_Board,Game_Side);
+		if(Game_End_Flag != 10)
+		{
+			if(Game_End_Flag == -1)
+				return Game_End_Flag;
+			if(Game_End_Flag == 0)
+				return Game_End_Flag;
+			if(Game_End_Flag == 1)
+				return Game_End_Flag;
+		}
 
-	}
-	//P2
-	Player2_Turn(Current_Board);
-	if(Game_End_Flag != 10)
-	{
-		if(Game_End_Flag == -1)
-			return Game_End_Flag;
-		if(Game_End_Flag == 0)
-			return Game_End_Flag;
-		if(Game_End_Flag == 1)
-			return Game_End_Flag;
-	}
+		//プレイヤー交代処理
+		if(Game_Side == 0)
+		{
+			Game_Side = 1;
+
+		}else if(Game_Side == 1){
+
+			Game_Side = 0;
+		}
 
 	}
 
 }
 
-//P1 Turn
-int Player1_Turn(int Board[Size][Size])
+//PTurn
+int Player_Turn(int Board[Size][Size],int which)
 {
 	char Input_Board_Number_C[256] , *error;//入力は初めここに格納後に判定eは変換不可時の返還先
 	int Input_Board_Number;
 	int Domination_Board_Pointer;//操作するボードポインタ記憶
+	int Player_Number = 1;//表示するプレイヤー番号
 	//P1がどこにおくか
 	//入力を確認する無効であれば再入力
 	while(1)
 	{
-		printf("Player1:");
+		if(which == 0)
+		{
+			Player_Number = 1;
+
+		}else if(which == 1){
+
+			Player_Number = 2;
+		}
+
+		printf("Player%d:",Player_Number);
 		//文字列として格納
 		scanf("%s",&Input_Board_Number_C);
 		//文字列を16進変換
@@ -169,62 +179,62 @@ int Player1_Turn(int Board[Size][Size])
 	{
 		case 0:
 			Domination_Board_Pointer = BP0;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP0 -= 1;//積み重ねたことを意味
 			break;
 		case 1:
 			Domination_Board_Pointer = BP1;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP1 -= 1;//積み重ねたことを意味
 			break;
 		case 2:
 			Domination_Board_Pointer = BP2;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP2 -= 1;//積み重ねたことを意味
 			break;
 		case 3:
 			Domination_Board_Pointer = BP3;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP3 -= 1;//積み重ねたことを意味
 			break;
 		case 4:
 			Domination_Board_Pointer = BP4;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP4 -= 1;//積み重ねたことを意味
 			break;
 		case 5:
 			Domination_Board_Pointer = BP5;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP5 -= 1;//積み重ねたことを意味
 			break;
 		case 6:
 			Domination_Board_Pointer = BP6;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP6 -= 1;//積み重ねたことを意味
 			break;
 		case 7:
 			Domination_Board_Pointer = BP7;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP7 -= 1;//積み重ねたことを意味
 			break;
 		case 8:
 			Domination_Board_Pointer = BP8;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP8 -= 1;//積み重ねたことを意味
 			break;
 		case 9:
 			Domination_Board_Pointer = BP9;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP9 -= 1;//積み重ねたことを意味
 			break;
 		case 0x0A:
 			Domination_Board_Pointer = BP10;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP10 -= 1;//積み重ねたことを意味
 			break;
 		case 0x0B:
 			Domination_Board_Pointer = BP11;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 0;
+			Board[Domination_Board_Pointer][Input_Board_Number] = which;
 			BP11 -= 1;//積み重ねたことを意味
 			break;
 	}
@@ -241,116 +251,8 @@ int Player1_Turn(int Board[Size][Size])
 		return;
 	}
 
-	
-	Game_Judge(0);
-}
-
-//P2 Turn
-int Player2_Turn(int Board[Size][Size])
-{
-	char Input_Board_Number_C[256] , *error;//入力は初めここに格納後に判定eは変換不可時の返還先
-	int Input_Board_Number;
-	int Domination_Board_Pointer;//操作するボードポインタ記憶
-	//P2がどこにおくか
-	//入力を確認する無効であれば再入力
-	while(1)
-	{
-		printf("Player2:");
-		//文字列として格納
-		scanf("%s",&Input_Board_Number_C);
-		//文字列を16進変換
-		Input_Board_Number = strtol(Input_Board_Number_C,&error,16);
-
-		//ここでは単純に入力を評価する
-		if(Input_Board_Number < 12  && strcmp("\0",error) == 0)
-		{
-			//条件に合えば抜ける
-			break;
-		}else{
-			printf("error\n");
-		}
-	}
-
-	//スタックポインターセレクター
-	switch(Input_Board_Number)
-	{
-		case 0:
-			Domination_Board_Pointer = BP0;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP0 -= 1;//積み重ねたことを意味
-			break;
-		case 1:
-			Domination_Board_Pointer = BP1;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP1 -= 1;//積み重ねたことを意味
-			break;
-		case 2:
-			Domination_Board_Pointer = BP2;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP2 -= 1;//積み重ねたことを意味
-			break;
-		case 3:
-			Domination_Board_Pointer = BP3;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP3 -= 1;//積み重ねたことを意味
-			break;
-		case 4:
-			Domination_Board_Pointer = BP4;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP4 -= 1;//積み重ねたことを意味
-			break;
-		case 5:
-			Domination_Board_Pointer = BP5;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP5  -= 1;//積み重ねたことを意味
-			break;
-		case 6:
-			Domination_Board_Pointer = BP6;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP6 -= 1;//積み重ねたことを意味
-			break;
-		case 7:
-			Domination_Board_Pointer = BP7;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP7 -= 1;//積み重ねたことを意味
-			break;
-		case 8:
-			Domination_Board_Pointer = BP8;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP8 -= 1;//積み重ねたことを意味
-			break;
-		case 9:
-			Domination_Board_Pointer = BP9;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP9 -= 1;//積み重ねたことを意味
-			break;
-		case 0x0A:
-			Domination_Board_Pointer = BP10;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP10 -= 1;//積み重ねたことを意味
-			break;
-		case 0x0B:
-			Domination_Board_Pointer = BP11;
-			Board[Domination_Board_Pointer][Input_Board_Number] = 1;
-			BP11 -= 1;//積み重ねたことを意味
-			break;
-	}
-
-		
-	//盤面情報表示
-	Show_Board();
-	//手数カウント
-	Number_of_Move_Count += 1;
-	//手数カウント上限で引き分け判定
-	if(Number_of_Move_Count == Number_of_Moves)
-	{
-		//引き分け判定とする
-		Game_End_Flag = -1;
-		return;
-	}
-
-	//置かれた場所を基準に勝敗判定を行う
-	Game_Judge(1);
+	//勝敗判定
+	Game_Judge(which);
 }
 
 //盤面表示
@@ -371,203 +273,112 @@ void Show_Board()
 			{
 				printf("X");
 			}else{
-				printf(".");
+				printf("・");
 			}
 		}
 		printf("\n");
 	}
 
 	//盤番号表示
-	printf("0123456789AB\n");
+	printf("0 1 2 3 4 5 6 7 8 9 A B\n");
 
 }
 
 //勝敗判定引数はどちらのターンでjudgeしているか(0,1で区別しているもの)引数Pは置いた場所の番号
-int Game_Judge(int Judge_Side)
+int Game_Judge(int which)
 {
-	int i=0,j=0,k=0;//ループ制御変数
+	int i=0,j=0;//ループ制御変数
 
 	//勝敗判定 縦横斜めに4つそろったら終了
+	//右横方向
+
+			for(i=0;i<Size;i++)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == which &&Current_Board[i][j+1] == which &&Current_Board[i][j+2] == which &&Current_Board[i][j+3] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//左横方向
+			for(i=0;i<Size;i++)
+			{
+				for(j=Size-1;j>4;j-=1)
+				if(Current_Board[i][j] == which &&Current_Board[i][j-1] == which &&Current_Board[i][j-2] == which &&Current_Board[i][j-3] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=0;j<Size;j++)
+				if(Current_Board[i][j] == which &&Current_Board[i-1][j] == which &&Current_Board[i-2][j] == which &&Current_Board[i-3][j] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=0;j<Size;j++)
+				if(Current_Board[i][j] == which &&Current_Board[i+1][j] == which &&Current_Board[i+2][j] == which &&Current_Board[i+3][j] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//右上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == which &&Current_Board[i-1][j+1] == which &&Current_Board[i-2][j+2] == which &&Current_Board[i-3][j+3] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//左上方向
+			for(i=Size-1;i>Size-3;i-=1)
+			{
+				for(j=Size-1;j>3;j-=1)
+				if(Current_Board[i][j] == which && Current_Board[i-1][j-1] == which && Current_Board[i-2][j-2] == which && Current_Board[i-3][j-3] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//右下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=0;j<Size-3;j++)
+				if(Current_Board[i][j] == which &&Current_Board[i+1][j+1] == which &&Current_Board[i+2][j+2] == which &&Current_Board[i+3][j+3] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
+			//左下方向
+			for(i=0;i<Size-3;i++)
+			{
+				for(j=Size-1;j>Size-3;j-=1)
+				if(Current_Board[i][j] == which &&Current_Board[i+1][j-1] == which &&Current_Board[i+2][j-2] == which &&Current_Board[i+3][j-3] == which)
+				{
+					Game_End_Flag = which;
+					return;
+				}
+			}
 		
-	switch (Judge_Side)
-	{
-		case 0:
-			//右横方向
-			for(i=0;i<Size;i++)
-			{
-				for(j=0;j<Size-3;j++)
-				if(Current_Board[i][j] == 0 &&Current_Board[i][j+1] == 0 &&Current_Board[i][j+2] == 0 &&Current_Board[i][j+3] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//左横方向
-			for(i=0;i<Size;i++)
-			{
-				for(j=Size-1;j>4;j-=1)
-				if(Current_Board[i][j] == 0 &&Current_Board[i][j-1] == 0 &&Current_Board[i][j-2] == 0 &&Current_Board[i][j-3] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//上方向
-			for(i=Size-1;i>Size-3;i-=1)
-			{
-				for(j=0;j<Size;j++)
-				if(Current_Board[i][j] == 0 &&Current_Board[i-1][j] == 0 &&Current_Board[i-2][j] == 0 &&Current_Board[i-3][j] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//下方向
-			for(i=0;i<Size-3;i++)
-			{
-				for(j=0;j<Size;j++)
-				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j] == 0 &&Current_Board[i+2][j] == 0 &&Current_Board[i+3][j] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//右上方向
-			for(i=Size-1;i>Size-3;i-=1)
-			{
-				for(j=0;j<Size-3;j++)
-				if(Current_Board[i][j] == 0 &&Current_Board[i-1][j+1] == 0 &&Current_Board[i-2][j+2] == 0 &&Current_Board[i-3][j+3] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//左上方向
-			for(i=Size-1;i>Size-3;i-=1)
-			{
-				for(j=Size-1;j>3;j-=1)
-				if(Current_Board[i][j] == 0 && Current_Board[i-1][j-1] == 0 && Current_Board[i-2][j-2] == 0 && Current_Board[i-3][j-3] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//右下方向
-			for(i=0;i<Size-3;i++)
-			{
-				for(j=0;j<Size-3;j++)
-				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j+1] == 0 &&Current_Board[i+2][j+2] == 0 &&Current_Board[i+3][j+3] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
-			//左下方向
-			for(i=0;i<Size-3;i++)
-			{
-				for(j=Size-1;j>Size-3;j-=1)
-				if(Current_Board[i][j] == 0 &&Current_Board[i+1][j-1] == 0 &&Current_Board[i+2][j-2] == 0 &&Current_Board[i+3][j-3] == 0)
-				{
-					Game_End_Flag = 0;
-					return;
-				}
-			}
+
 
 	
-			break;
-
-			
-		case 1:
-			//右横方向
-			for(i=0;i<Size;i++)
-			{
-				for(j=0;j<Size-3;j++)
-				if(Current_Board[i][j] == 1 &&Current_Board[i][j+1] == 1 &&Current_Board[i][j+2] == 1 &&Current_Board[i][j+3] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//左横方向
-			for(i=0;i<Size;i++)
-			{
-				for(j=Size-1;j>4;j-=1)
-				if(Current_Board[i][j] == 1 &&Current_Board[i][j-1] == 1 &&Current_Board[i][j-2] == 1 &&Current_Board[i][j-3] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//上方向
-			for(i=Size-1;i>Size-3;i-=1)
-			{
-				for(j=0;j<Size;j++)
-				if(Current_Board[i][j] == 1 &&Current_Board[i-1][j] == 1 &&Current_Board[i-2][j] == 1 &&Current_Board[i-3][j] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//下方向
-			for(i=0;i<Size-3;i++)
-			{
-				for(j=0;j<Size;j++)
-				if(Current_Board[i][j] == 1 &&Current_Board[i+1][j] == 1 &&Current_Board[i+2][j] == 1 &&Current_Board[i+3][j] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//右上方向
-			for(i=Size-1;i>Size-3;i-=1)
-			{
-				for(j=0;j<Size-3;j++)
-				if(Current_Board[i][j] == 1 &&Current_Board[i-1][j+1] == 1 &&Current_Board[i-2][j+2] == 1 &&Current_Board[i-3][j+3] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//左上方向
-			for(i=Size-1;i>Size-3;i-=1)
-			{
-				for(j=Size-1;j>3;j-=1)
-				if(Current_Board[i][j] == 1 && Current_Board[i-1][j-1] == 1 && Current_Board[i-2][j-2] == 1 && Current_Board[i-3][j-3] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//右下方向
-			for(i=0;i<Size-3;i++)
-			{
-				for(j=0;j<Size-3;j++)
-				if(Current_Board[i][j] == 1 &&Current_Board[i+1][j+1] == 1 &&Current_Board[i+2][j+2] == 1 &&Current_Board[i+3][j+3] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-			//左下方向
-			for(i=0;i<Size-3;i++)
-			{
-				for(j=Size-1;j>Size-3;j-=1)
-				if(Current_Board[i][j] == 1 &&Current_Board[i+1][j-1] == 1 &&Current_Board[i+2][j-2] == 1 &&Current_Board[i+3][j-3] == 1)
-				{
-					Game_End_Flag = 1;
-					return;
-				}
-			}
-
-	
-			break;
-
-
-
-	}
 
 	//引き分け判定関数に飛ばす
-	Game_End_Flag = Game_Judge_Draw();
+			if(Game_End_Flag != 0 && Game_End_Flag != 1)
+				Game_End_Flag = Game_Judge_Draw();
 
 }
 
