@@ -4,7 +4,7 @@
 
 ####各プログラムの内容
 
-    [gamePvsP.c](http://github.com/OgamiP/2015/blob/master/gamePvsP.c)
+    [gamePvsP.c](/gamePvsP.c)
 二人のプレイヤーで箱積みゲームを行う
 
     ・v_plays.c
