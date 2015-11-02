@@ -20,3 +20,9 @@
 
 プレイヤーとCPUの対局（こちらはCPU側の手は完全ランダム）
 
+[pvc_R.c](https://github.com/OgamiP/2015/blob/master/pvc_R.c)
+
+中間発表時に使用したもの。実行時の引数にどちらが専攻科の情報与える処理だけ追加
+
+
+
