@@ -24,5 +24,9 @@
 
 中間発表時に使用したもの。実行時の引数にどちらが先行かの情報与える処理だけ追加
 
+[min_max_d3.c](https://github.com/OgamiP/2015/blob/master/min_max_d3.c)
+
+ミニマックス法を加えたPvC
+
 
 
