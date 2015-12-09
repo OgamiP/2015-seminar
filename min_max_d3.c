@@ -1,147 +1,161 @@
-//” ‚ª4‚Â•À‚ÔA–h‚®Aƒ~ƒjƒ}ƒbƒNƒX–@‚Ì‡‚ÅCPU‚ª“®‚­
-//Ÿ¨c‚Å’u‚¯‚È‚¢ê‡‚Ìˆ—‚ğ’Ç‰Á
+ï»¿//ç®±ãŒ4ã¤ä¸¦ã¶ã€é˜²ãã€ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹æ³•ã®é †ã§CPUãŒå‹•ã
+//æ¬¡â†’ç¸¦ã§ç½®ã‘ãªã„å ´åˆã®å‡¦ç†ã‚’è¿½åŠ 
 
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include<math.h>
 
-//”Õ–ÊƒTƒCƒY
+#include<time.h>
+
+//ç›¤é¢ã‚µã‚¤ã‚º
 #define Size 12
-//ƒQ[ƒ€–ØƒTƒCƒY
-#define Game_Tree_Size 10000
-//ƒ~ƒjƒ}ƒbƒNƒX–@‚Ì[‚³
-#define Depth 3
-//è”‚ÌãŒÀ
-#define Number_of_Moves 72
+//ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹æ³•ã®æ·±ã•
+#define Depth 1
+//æ‰‹æ•°ã®ä¸Šé™
+#define Number_of_Moves 144
+//ã‚²ãƒ¼ãƒ æœ¨ãƒãƒ¼ãƒ‰ç·æ•°
+#define Game_Tree_Size 100000
 
-/*****ŠÖ”ƒvƒƒgƒ^ƒCƒvéŒ¾*****/
+/*****é–¢æ•°ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€*****/
 
-//”Õ–Êî•ñ‰Šú‰»
+//ç›¤é¢æƒ…å ±åˆæœŸåŒ–
 void Initialization_Board();
-//ƒQ[ƒ€ƒXƒ^[ƒg
+//ã‚²ãƒ¼ãƒ ã‚¹ã‚¿ãƒ¼ãƒˆ
 int Game_Start();
 
-//s“®Œã‚Ì”Õ–Ê‚ğ•\¦
+//è¡Œå‹•å¾Œã®ç›¤é¢ã‚’è¡¨ç¤º
 void Show_Board();
 
-//ŠeƒvƒŒƒCƒ„[s“®which:‰½F‚ªs“®‚·‚é‚©
+//å„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¡Œå‹•which:ä½•è‰²ãŒè¡Œå‹•ã™ã‚‹ã‹
 int Player_Turn(int Board[Size][Size],int which);
 
-//ƒRƒ“ƒsƒ…[ƒ^‘¤‚Ìè‚ğŒˆ’è‚·‚é(ˆø”ƒvƒŒƒCƒ„[‚Ì”’•
+//ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿å´ã®æ‰‹ã‚’æ±ºå®šã™ã‚‹(å¼•æ•°ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç™½é»’
 int CPU_Turn(int which);
 
-//Ÿ”s”»’èwhich:‚Ç‚¿‚ç‘¤‚Ì”»’è‚ğ‚·‚é‚©
+//å‹æ•—åˆ¤å®šwhich:ã©ã¡ã‚‰å´ã®åˆ¤å®šã‚’ã™ã‚‹ã‹
 int Game_Judge(int which);
 
-//ˆø‚«•ª‚¯”»’è
+//å¼•ãåˆ†ã‘åˆ¤å®š
 int Game_Judge_Draw();
 
-//ƒQ[ƒ€–Ø\’zŠÖ”
+//ã‚²ãƒ¼ãƒ æœ¨æ§‹ç¯‰é–¢æ•°
 void Create_Game_Tree();
 
-//•]‰¿’lZoŠÖ”
+//è©•ä¾¡å€¤ç®—å‡ºé–¢æ•°
 int Evaluation_Value_Calc();
 
-//eƒm[ƒh‚©‚çqƒm[ƒh‚ğè”‚Ì”‚¾‚¯“WŠJ‚·‚éŠÖ”
+//è¦ªãƒãƒ¼ãƒ‰ã‹ã‚‰å­ãƒãƒ¼ãƒ‰ã‚’æ‰‹æ•°ã®æ•°ã ã‘å±•é–‹ã™ã‚‹é–¢æ•°
 int Create_Child_Node(int Parent_Node_Number);
 
-//ƒ~ƒjƒ}ƒbƒNƒX–@(¡Œãˆø”‚ğæ“Ç‚Ş[‚³‚É‚·‚é‚©H)
+//ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹æ³•
 int Min_Max();
 
-//•]‰¿ŠÖ”ˆø”:•]‰¿’l‚ğ‹‚ß‚éƒm[ƒh”Ô†
+//è©•ä¾¡é–¢æ•°å¼•æ•°:è©•ä¾¡å€¤ã‚’æ±‚ã‚ã‚‹ãƒãƒ¼ãƒ‰ç•ªå·
 int Evaluation_Fanction(int which,int Node_Number,int Board_Label_Wide,int Board_Label_Height);
 
-//Šeƒm[ƒh‚Ì”Õ–Ê\’z ’u‚­êŠ‚Æ‰½F‚ğ’u‚­‚©
+//å„ãƒãƒ¼ãƒ‰ã®ç›¤é¢æ§‹ç¯‰ ç½®ãå ´æ‰€ã¨ä½•è‰²ã‚’ç½®ãã‹
 void Create_Board(int Position,int which,int node_number);
 
-//ƒm[ƒh”Õ–Êî•ñ‚Ì”Õ–ÊƒRƒs[
+//ãƒãƒ¼ãƒ‰ç›¤é¢æƒ…å ±ã®ç›¤é¢ã‚³ãƒ”ãƒ¼
 int Board_Copy();
 
-//ƒQ[ƒ€–Ø—×Ús—ñ(Œ»İ‘Ã“–‚ÈƒTƒCƒY•s–¾:ƒƒ‚ƒŠ“®“IŠm•Û‚Ís‚í‚È‚¢•ûj)
-int Game_Tree[Game_Tree_Size][Game_Tree_Size];
+//è©•ä¾¡å€¤æ ¼ç´é…åˆ—ï¼ˆé…åˆ—è¦ç´ æŒ‡å®šã§ãã®ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’æ ¼ç´ ãƒãƒ¼ãƒ‰æ•°åˆ†å‹•çš„ç¢ºä¿ï¼‰
+int *Evaluation_Value;
 
-//•]‰¿’lŠi”[”z—ñi”z—ñ—v‘fw’è‚Å‚»‚Ìƒm[ƒh‚Ì•]‰¿’l‚ğŠi”[j
-int Evaluation_Value[Game_Tree_Size];
-
-//‚Ğ‚Æ‚Â’u‚¢‚½‚Æ‚«AŸ‚ÂA‚à‚µ‚­‚Í‘Šè‚ª3‚Â‚»‚ë‚Á‚Ä‚¢‚é‚Æ‚±‚ë‚É’u‚­As‚¤(ˆø”:’u‚­F •:1 ”’:0)
+//ã²ã¨ã¤ç½®ã„ãŸã¨ãã€å‹ã¤ã€ã‚‚ã—ãã¯ç›¸æ‰‹ãŒ3ã¤ãã‚ã£ã¦ã„ã‚‹ã¨ã“ã‚ã«ç½®ãã€è¡Œã†(å¼•æ•°:ç½®ãè‰² é»’:1 ç™½:0)
 int Find_Vic_Def_Point(int which);
+
+//ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿å´ã®æ‰‹ã‚’ä¹±ã«ã‚ˆã‚Šæ±ºå®šã™ã‚‹
+int Player_Random(int Min ,int Max);
+
+//ç¸¦ã®ãƒ©ã‚¤ãƒ³ã§ç½®ã‘ã‚‹ã‹ç¢ºèªã™ã‚‹
+int Check_Height(int Point);
 
 
 
 /******************************/
 
-/*****ƒOƒ[ƒoƒ‹•Ï”*****/
-//Œ»İ‚Ì”Õ–Ê
+/*****ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°*****/
+
+//ç¾åœ¨ã®ç›¤é¢
 int Current_Board[Size][Size];
 
-//Ï‚İd‚Ë‹L‰¯ƒ|ƒCƒ“ƒ^[”z—ñ
+//ç©ã¿é‡ã­è¨˜æ†¶ãƒã‚¤ãƒ³ã‚¿ãƒ¼é…åˆ—
 int *Board_Pointer;
 
-//Ï‚İd‚Ë‹L‰¯ƒ|ƒCƒ“ƒ^[§Œä•Ï”
+//ç©ã¿é‡ã­è¨˜æ†¶ãƒã‚¤ãƒ³ã‚¿ãƒ¼åˆ¶å¾¡å¤‰æ•°
 int BP0=Size-1,BP1=Size-1,BP2=Size-1,BP3=Size-1,BP4=Size-1, BP5=Size-1,BP6=Size-1,
 	BP7=Size-1,BP8=Size-1,BP9=Size-1,BP10=Size-1,BP11=Size-1;
 
-//Œ»İ‚Ç‚¿‚ç‚ªs“®‚µ‚Ä‚¢‚é‚©
-int Game_Side = 0;//0:”’1:•
+//ç¾åœ¨ã©ã¡ã‚‰ãŒè¡Œå‹•ã—ã¦ã„ã‚‹ã‹
+int Game_Side = 0;//0:ç™½1:é»’
 
-//è”ŠÇ—•Ï”
+//æ‰‹æ•°ç®¡ç†å¤‰æ•°
 int Number_of_Move_Count = 0;
 
-//ƒQ[ƒ€I—¹ƒtƒ‰ƒO
-int Game_End_Flag = 10;//‰Šú’l-1,0,1ˆÈŠO§ŒÀ‚È‚µ
+//ã‚²ãƒ¼ãƒ çµ‚äº†ãƒ•ãƒ©ã‚°
+int Game_End_Flag = 10;//åˆæœŸå€¤-1,0,1ä»¥å¤–åˆ¶é™ãªã—
 
-//Œ»İ\’z’†‚Ì–Ø‚Ìeƒm[ƒh‚Ìƒm[ƒh‚Ì[‚³ˆÊ’u
+//ç¾åœ¨æ§‹ç¯‰ä¸­ã®æœ¨ã®è¦ªãƒãƒ¼ãƒ‰ã®ãƒãƒ¼ãƒ‰ã®æ·±ã•ä½ç½®
 int Current_Depth = 0;
 
-//ƒQ[ƒ€–Ø\’z:Ÿ‚Ì[‚³‚Ì“WŠJŠJnƒm[ƒhZoƒtƒ‰ƒO:0:Zo1:Zo‚µ‚È‚¢
+//ã‚²ãƒ¼ãƒ æœ¨æ§‹ç¯‰:æ¬¡ã®æ·±ã•ã®å±•é–‹é–‹å§‹ãƒãƒ¼ãƒ‰ç®—å‡ºãƒ•ãƒ©ã‚°:0:ç®—å‡º1:ç®—å‡ºã—ãªã„
 int Next_Node_Flag = 0;
 
-//Ÿ‚É“WŠJ‚·‚éeƒm[ƒh
+//æ¬¡ã«å±•é–‹ã™ã‚‹è¦ªãƒãƒ¼ãƒ‰
 int Next_Parent_Node;
 
-//•]‰¿’lŠi”[”z—ñi”z—ñ—v‘fw’è‚Å‚»‚Ìƒm[ƒh‚Ì•]‰¿’l‚ğŠi”[j
-int Evaluation_Value[Game_Tree_Size];
+int *Node;//ãƒãƒ¼ãƒ‰ã®æœ€å¤§æ•°åˆ†ã®é…åˆ—ã‚’å®¹æ˜“(å¿µã®ãŸã‚å‹•çš„ç¢ºä¿)ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹ã§ä½¿ç”¨
+//è©•ä¾¡å€¤æ ¼ç´é…åˆ—ï¼ˆé…åˆ—è¦ç´ æŒ‡å®šã§ãã®ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’æ ¼ç´ï¼‰
+int *Evaluation_Value;
 
-//ƒQ[ƒ€–Ø‚Ìƒm[ƒh”Ô†İ’è‚Ég—p
+//ã‚²ãƒ¼ãƒ æœ¨ã®ãƒãƒ¼ãƒ‰ç•ªå·è¨­å®šã«ä½¿ç”¨
 int Node_Number = 0;
 
-//CPU‚Ìè‚ªŒˆ’è‚µ‚½‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO(Œˆ’è:1 –¢Œˆ’è:0)
+//CPUã®æ‰‹ãŒæ±ºå®šã—ãŸã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°(æ±ºå®š:1 æœªæ±ºå®š:0)
 int CPU_Decision = 0;
 
-//ƒm[ƒh‚Æ”Õ–ÊŠÛX‚ğ\‘¢‘Ì‚ÅŠÇ—node”•ªŠm•Û Game_Tree_Node[ƒm[ƒh”Ô†]‚Ì‚æ‚¤‚ÈƒAƒNƒZƒX•û–@
+//CPUã®æ‰‹ã‚’ç½®ãå ´åˆã€ãã“ã«ç½®ã‘ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°é…åˆ—
+//ç½®ã‘ã‚‹:0 ç½®ã‘ãªã„:1
+int Put_Enable[Size] = {0};
+
+//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã¯ä¹±æ•°ã‹æ‰‹å‹•ã‹
+int Play_Style = 0;//0æ‰‹å‹•ã€€1ä¹±æ•°
+
+//ãƒãƒ¼ãƒ‰ã¨ç›¤é¢ä¸¸ã€…ã‚’æ§‹é€ ä½“ã§ç®¡ç†nodeæ•°åˆ†ç¢ºä¿ Game_Tree_Node[ãƒãƒ¼ãƒ‰ç•ªå·]ã®ã‚ˆã†ãªã‚¢ã‚¯ã‚»ã‚¹æ–¹æ³•
 struct Game_Tree_Node
 {
-	//‚±‚Ìƒm[ƒh‚ÌParentƒm[ƒh
+	//ã“ã®ãƒãƒ¼ãƒ‰ã®Parentãƒãƒ¼ãƒ‰
 	int This_Node_Parent;
 
-	//‚±‚Ìƒm[ƒh‚Ì[‚³î•ñ
+	//ã“ã®ãƒãƒ¼ãƒ‰ã®æ·±ã•æƒ…å ±
 	int This_Node_Depth;
 
-	//‘JˆÚæƒm[ƒh”z—ñ
+	//é·ç§»å…ˆãƒãƒ¼ãƒ‰é…åˆ—
 	int State_Node[12];
-	//‘JˆÚæƒm[ƒh”z—ñ‚Ì§Œä•Ï”(‘JˆÚ‚·‚é‚Æ‚«‚Ìè‚É‚à—˜—p)
+	//é·ç§»å…ˆãƒãƒ¼ãƒ‰é…åˆ—ã®åˆ¶å¾¡å¤‰æ•°(é·ç§»ã™ã‚‹ã¨ãã®æ‰‹ã«ã‚‚åˆ©ç”¨)
 	int State_Number;
-	//‘JˆÚè
+	//é·ç§»æ‰‹(è¦ªã‹ã‚‰ä½•ã®æ‰‹ã§ã“ã®ãƒãƒ¼ãƒ‰ã«é·ç§»ã—ã¦ãã‚‹ã‹)
 	int State_Hand;
 
-	//e‚Ì•]‰¿’l‚ğ‹‚ß‚éÛAmax‚Æmin‚Ç‚¿‚ç‚ğ‹‚ß‚é‘¤‚É“ü‚Á‚Ä‚¢‚é‚©
+	//è¦ªã®è©•ä¾¡å€¤ã‚’æ±‚ã‚ã‚‹éš›ã€maxã¨minã©ã¡ã‚‰ã‚’æ±‚ã‚ã‚‹å´ã«å…¥ã£ã¦ã„ã‚‹ã‹
 	//max:1 min:0
 	int Max_or_Min;
 
-	//(•K—v‚©‚ÍŒŸ“¢‚Ì•K—vƒAƒŠ)”Õ–Ê\’z‚ÌÛ”’•‚Ç‚Á‚¿‚ğ’u‚­‚Ì‚©
+	//(å¿…è¦ã‹ã¯æ¤œè¨ã®å¿…è¦ã‚¢ãƒª)ç›¤é¢æ§‹ç¯‰ã®éš›ç™½é»’ã©ã£ã¡ã‚’ç½®ãã®ã‹
 	//white:0 black:1
 	int which;
 
-	//‚±‚Ìƒm[ƒh‚Ì”Õ–Êî•ñ
+	//ã“ã®ãƒãƒ¼ãƒ‰ã®ç›¤é¢æƒ…å ±
 	int This_Node_Board_Info[Size][Size];
 
-	//‚±‚Ìƒm[ƒh‚Ì•]‰¿’l
+	//ã“ã®ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤
 	int This_Node_Evaluation_Value;
 
 };
 
-//“®“I‚ÉŠm•Û‚³‚ê‚é\‘¢‘Ì(ÀÛ‚É‘€ì‚Ég‚¤‚à‚Ì)
+//å‹•çš„ã«ç¢ºä¿ã•ã‚Œã‚‹æ§‹é€ ä½“(å®Ÿéš›ã«æ“ä½œã«ä½¿ã†ã‚‚ã®)
 struct Game_Tree_Node *Use_Game_Tree;
 
 
@@ -150,22 +164,39 @@ struct Game_Tree_Node *Use_Game_Tree;
 /************************/
 
 //main
-//ˆø” human lŠÔ‘¤ƒXƒ^[ƒg@cpu‘¤ƒXƒ^[ƒg
+//å¼•æ•° human äººé–“å´ã‚¹ã‚¿ãƒ¼ãƒˆã€€cpuå´ã‚¹ã‚¿ãƒ¼ãƒˆ
 int main(int argc, char *argv[])
 {
 
-		//‰‚ß‚Éƒm[ƒh\‘¢‘Ì‚ğƒm[ƒh”‚¾‚¯Šm•Û‚·‚é
-		//Œ»İ‚ÍŠm•Û‚·‚éŒÂ”‚ÍŒÅ’è‚µA“®“I‚ÉŠm•Û‚·‚é
+		//åˆã‚ã«ãƒãƒ¼ãƒ‰æ§‹é€ ä½“ã‚’ãƒãƒ¼ãƒ‰æ•°ã ã‘ç¢ºä¿ã™ã‚‹
+		//ç¾åœ¨ã¯ç¢ºä¿ã™ã‚‹å€‹æ•°ã¯å›ºå®šã—ã€å‹•çš„ã«ç¢ºä¿ã™ã‚‹
 		Use_Game_Tree = (struct Game_Tree_Node*)malloc(sizeof(struct Game_Tree_Node) * Game_Tree_Size);
 		if(Use_Game_Tree == NULL)
 		{
-			//ƒƒ‚ƒŠ‚ªæ‚ê‚È‚¢ê‡‚»‚Ì|‚ğ•\¦‚µA‹­§I—¹‚³‚¹‚é
+			//ãƒ¡ãƒ¢ãƒªãŒå–ã‚Œãªã„å ´åˆãã®æ—¨ã‚’è¡¨ç¤ºã—ã€å¼·åˆ¶çµ‚äº†ã•ã›ã‚‹
 			printf("memory missed\n");
 			exit(0);	
 		}
-		
 
-	//æèAŒãèİ’è
+		//å„ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã‚’å‹•çš„ç¢ºä¿
+		//Nodeå‹•çš„ç¢ºä¿
+		Evaluation_Value = (int*)malloc(sizeof(int) * Game_Tree_Size);
+		if(Evaluation_Value == NULL)
+		{
+			printf("error\n");
+			exit(0);
+		}
+
+		//Nodeé…åˆ—å‹•çš„ç¢ºä¿
+		Node = (int*)malloc(sizeof(int) * Game_Tree_Size);
+		if(Node == NULL)
+		{
+			printf("error\n");
+			exit(0);
+		}
+		
+		
+	//å…ˆæ‰‹ã€å¾Œæ‰‹è¨­å®š
 	if(strcmp(argv[1],"human") == 0)
 	{
 		Game_Side = 0;
@@ -178,10 +209,25 @@ int main(int argc, char *argv[])
 
 	}
 
-	//”Õ–Êî•ñ‰Šú‰»
+
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã¯ä¹±æ•°ã‹æ‰‹å‹•ã‹
+	if(strcmp(argv[2],"Auot") == 0)
+	{
+		Play_Style = 1;
+
+	}else{
+
+		Play_Style = 0;
+
+	}
+
+	//æ‰‹ã‚’ä¹±æ•°ã§æ±ºå®šã™ã‚‹ç‚ºã€ä¹±æ•°ã®ã‚·ãƒ¼ãƒ‰ã‚’æ™‚åˆ»ã¨ã™ã‚‹
+	srand((unsigned int)time(NULL));
+
+	//ç›¤é¢æƒ…å ±åˆæœŸåŒ–
 	Initialization_Board();
 
-	//ƒQ[ƒ€ŠJn
+	//ã‚²ãƒ¼ãƒ é–‹å§‹
 	Game_Start();
 
 	if(Game_End_Flag == -1)
@@ -194,24 +240,25 @@ int main(int argc, char *argv[])
 	if(Game_End_Flag == 1)
 		printf("Player2 Win\n");
 
+
 	return 0;
 
 }
 
-/*****”Õ–Ê‰Šú‰»*****
+/*****ç›¤é¢åˆæœŸåŒ–*****
 
-”z—ñ—v‘f...
--1  ¨ ‹ó‚«
-1	¨	X(•)
-0	¨  0(”’)
+é…åˆ—è¦ç´ ...
+-1  â†’ ç©ºã
+1	â†’	X(é»’)
+0	â†’  0(ç™½)
 
 ********************/
 void Initialization_Board()
 {
-	//ƒ‹[ƒv§Œä•Ï”
+	//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
 	int i = 0,j = 0;
 
-	//ƒ{[ƒhƒ|ƒCƒ“ƒ^[‰Šú‰»
+	//ãƒœãƒ¼ãƒ‰ãƒã‚¤ãƒ³ã‚¿ãƒ¼åˆæœŸåŒ–
 	Board_Pointer = (int*)malloc(sizeof(int) * Size);
 	for(i=0;i<Size;i++)
 		Board_Pointer[i] = 0;
@@ -234,15 +281,15 @@ void Initialization_Board()
 
 	}
 
-	//”Õ”Ô†•\¦
+	//ç›¤ç•ªå·è¡¨ç¤º
 	printf("0123456789AB\n");
 
 }
 
-//ƒQ[ƒ€‚Ì²
+//ã‚²ãƒ¼ãƒ ã®è»¸
 int Game_Start()
 {
-	//ƒQ[ƒ€I—¹ƒtƒ‰ƒO
+	//ã‚²ãƒ¼ãƒ çµ‚äº†ãƒ•ãƒ©ã‚°
 	/**********
 
 	-1 = Draw
@@ -251,10 +298,10 @@ int Game_Start()
 
 	**********/
 
-	//ŠeƒvƒŒƒCƒ„[s“®
+	//å„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¡Œå‹•
 	while(1)
 	{
-	//ƒvƒŒƒCƒ„[‚Ìs“®‚ÍŸ‚ğƒ‹[ƒvŸ”s”»’èŒãŒğ‘ãˆ—‚·‚é
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡Œå‹•ã¯æ¬¡ã‚’ãƒ«ãƒ¼ãƒ—å‹æ•—åˆ¤å®šå¾Œäº¤ä»£å‡¦ç†ã™ã‚‹
 		Player_Turn(Current_Board,Game_Side);
 		if(Game_End_Flag != 10)
 		{
@@ -266,7 +313,7 @@ int Game_Start()
 				return Game_End_Flag;
 		}
 
-		//ƒvƒŒƒCƒ„[Œğ‘ãˆ—
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äº¤ä»£å‡¦ç†
 		if(Game_Side == 0)
 		{
 			Game_Side = 1;
@@ -280,15 +327,17 @@ int Game_Start()
 
 }
 
-//ŠeƒvƒŒƒCƒ„[s“®
+//å„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¡Œå‹•
 int Player_Turn(int Board[Size][Size],int which)
 {
-	char Input_Board_Number_C[256] , *error;//“ü—Í‚Í‰‚ß‚±‚±‚ÉŠi”[Œã‚É”»’èe‚Í•ÏŠ·•s‰Â‚Ì•ÔŠÒæ
+	char Input_Board_Number_C[256] , *error;//å…¥åŠ›ã¯åˆã‚ã“ã“ã«æ ¼ç´å¾Œã«åˆ¤å®šeã¯å¤‰æ›ä¸å¯æ™‚ã®è¿”é‚„å…ˆ
 	int Input_Board_Number;
-	int Domination_Board_Pointer;//‘€ì‚·‚éƒ{[ƒhƒ|ƒCƒ“ƒ^‹L‰¯
-	int Player_Number = 1;//•\¦‚·‚éƒvƒŒƒCƒ„[”Ô†
-	//P1‚ª‚Ç‚±‚É‚¨‚­‚©
-	//“ü—Í‚ğŠm”F‚·‚é–³Œø‚Å‚ ‚ê‚ÎÄ“ü—Í
+	int Domination_Board_Pointer;//æ“ä½œã™ã‚‹ãƒœãƒ¼ãƒ‰ãƒã‚¤ãƒ³ã‚¿è¨˜æ†¶
+	int Player_Number = 1;//è¡¨ç¤ºã™ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·
+	int i,j;
+
+	//P1ãŒã©ã“ã«ãŠãã‹
+	//å…¥åŠ›ã‚’ç¢ºèªã™ã‚‹ç„¡åŠ¹ã§ã‚ã‚Œã°å†å…¥åŠ›
 	while(1)
 	{
 		if(which == 0)
@@ -301,129 +350,165 @@ int Player_Turn(int Board[Size][Size],int which)
 		}
 
 		printf("Player%d:",Player_Number);
-		if(which == 0)
+		//ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ã§ã¤ç›®ãŒAoutã§ä¹±æ•°ã€€Man ã§æ‰‹å‹•
+		if(Play_Style == 0 && which == 0)
 		{
-		//•¶š—ñ‚Æ‚µ‚ÄŠi”[
+		//æ–‡å­—åˆ—ã¨ã—ã¦æ ¼ç´
 		scanf("%s",&Input_Board_Number_C);
-		//•¶š—ñ‚ğ16i•ÏŠ·
+		//æ–‡å­—åˆ—ã‚’16é€²å¤‰æ›
 		Input_Board_Number = strtol(Input_Board_Number_C,&error,16);
+
+		}else if(Play_Style == 1 && which == 0)//ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ã‚ˆã‚Šãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ãŒä¹±æ•°ã®å ´åˆ
+		{
+			//4ã¤ä¸¦ã¶å ´æ‰€ã‚’æ¢ã™
+			Input_Board_Number = Find_Vic_Def_Point(0);
+			//4ã¤ä¸¦ã¶ã“ã¨ã‚’é˜²ã
+			if(Input_Board_Number == -1)
+			{
+				Input_Board_Number = Find_Vic_Def_Point(1);
+				Game_End_Flag = 10;
+			}
+
+			//ãƒ©ãƒ³ãƒ€ãƒ 
+			//ç½®ã‘ã‚‹ã¾ã§ä¹±æ•°ç™ºç”Ÿ
+			while(1)
+			{
+
+				if(Input_Board_Number == -1)
+					Input_Board_Number = Player_Random(0,11);
+
+				if(Current_Board[0][Input_Board_Number] == -1)
+				{
+					printf("%d\n",Input_Board_Number);
+					break;
+				}
+				
+				printf("%d\nã«ç½®ã‘ã¾ã›ã‚“",Input_Board_Number);
+				Input_Board_Number = -1;
+			}
+		
+		
 		}else if(which == 1)
 		{
 		
-			//CPU‚ÌèŒˆ’èƒtƒ‰ƒO‚ğƒŠƒZƒbƒg
+			//CPUã®æ‰‹æ±ºå®šãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆ
 			CPU_Decision = 0;
-			Input_Board_Number = CPU_Turn(which);//which=1‚Ì‚Æ‚«cpu‚Ìƒ^[ƒ“(•’u‚«‚ªcpu‚ÅŒÅ’è)
+			Input_Board_Number = CPU_Turn(which);//which=1ã®ã¨ãcpuã®ã‚¿ãƒ¼ãƒ³(é»’ç½®ããŒcpuã§å›ºå®š)
 			printf("%d\n",Input_Board_Number);
 
 		}
-		
 
-
-		
-
-		//‚±‚±‚Å‚Í’Pƒ‚É“ü—Í‚ğ•]‰¿‚·‚élŠÔ‚ÆCPU‚Å‚Í•Ê‚Å”»’è‚·‚é
-		if(which == 0 && Input_Board_Number < 12  && strcmp("\0",error) == 0)
+		//ã“ã“ã§ã¯å˜ç´”ã«å…¥åŠ›ã‚’è©•ä¾¡ã™ã‚‹äººé–“ã¨CPUã§ã¯åˆ¥ã§åˆ¤å®šã™ã‚‹
+	if(which == 0 && Play_Style != 1 && Input_Board_Number < 12  && strcmp("\0",error) == 0 && Current_Board[0][Input_Board_Number] == -1)
 		{
-			//ğŒ‚É‡‚¦‚Î”²‚¯‚é
+			//æ¡ä»¶ã«åˆãˆã°æŠœã‘ã‚‹
 			break;
-		}else if(which == 1 &&  Input_Board_Number < 12){
+		}
+		if(which == 1 &&  Input_Board_Number < 12){
 			break;
 			
-		}else{
-			
-			printf("error\n");
+		}
+		if(which == 0 && Play_Style == 1 && Current_Board[0][Input_Board_Number] == -1){
+			break;
 
 		}
+
+
+		//break;
 	}
 
-	//ƒXƒ^ƒbƒNƒ|ƒCƒ“ƒ^[ƒZƒŒƒNƒ^[
+	//ã‚¹ã‚¿ãƒƒã‚¯ãƒã‚¤ãƒ³ã‚¿ãƒ¼ã‚»ãƒ¬ã‚¯ã‚¿ãƒ¼
 	switch(Input_Board_Number)
 	{
 		case 0:
 			Domination_Board_Pointer = BP0;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP0 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP0 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 1:
 			Domination_Board_Pointer = BP1;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP1 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP1 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 2:
 			Domination_Board_Pointer = BP2;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP2 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP2 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 3:
 			Domination_Board_Pointer = BP3;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP3 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP3 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 4:
 			Domination_Board_Pointer = BP4;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP4 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP4 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 5:
 			Domination_Board_Pointer = BP5;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP5 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP5 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 6:
 			Domination_Board_Pointer = BP6;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP6 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP6 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 7:
 			Domination_Board_Pointer = BP7;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP7 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP7 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 8:
 			Domination_Board_Pointer = BP8;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP8 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP8 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 9:
 			Domination_Board_Pointer = BP9;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP9 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP9 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 0x0A:
 			Domination_Board_Pointer = BP10;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP10 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP10 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 		case 0x0B:
 			Domination_Board_Pointer = BP11;
 			Board[Domination_Board_Pointer][Input_Board_Number] = which;
-			BP11 -= 1;//Ï‚İd‚Ë‚½‚±‚Æ‚ğˆÓ–¡
+			BP11 -= 1;//ç©ã¿é‡ã­ãŸã“ã¨ã‚’æ„å‘³
 			break;
 	}
 	
-	//”Õ–Êî•ñ•\¦
+	//ç›¤é¢æƒ…å ±è¡¨ç¤º
 	Show_Board();
-	//è”ƒJƒEƒ“ƒg
+
+	//å‹æ•—åˆ¤å®š
+	Game_Judge(which);
+	//æ‰‹æ•°ã‚«ã‚¦ãƒ³ãƒˆ
 	Number_of_Move_Count += 1;
-	//è”ƒJƒEƒ“ƒgãŒÀ‚Åˆø‚«•ª‚¯”»’è
+	//æ‰‹æ•°ã‚«ã‚¦ãƒ³ãƒˆä¸Šé™ã§å¼•ãåˆ†ã‘åˆ¤å®š
 	if(Number_of_Move_Count == Number_of_Moves)
 	{
-		//ˆø‚«•ª‚¯”»’è‚Æ‚·‚é
+		//å¼•ãåˆ†ã‘åˆ¤å®šã¨ã™ã‚‹
 		Game_End_Flag = -1;
 		return;
 	}
-
-	//Ÿ”s”»’è
-	Game_Judge(which);
 }
 
-//”Õ–Ê•\¦
+//ç›¤é¢è¡¨ç¤º
 void Show_Board()
 {
-	//ƒ‹[ƒv§Œä•Ï”
+	//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
 	int i,j;
+
+
+	printf("\n");
+
 	
-	//”š‚É‘Î‰‚µ‚½”Õî•ñ‚ğ•\¦‚·‚é
+	//æ•°å­—ã«å¯¾å¿œã—ãŸç›¤æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 	for(i=0;i<Size;i++)
 	{
 		for(j=0;j<Size;j++)
@@ -433,26 +518,33 @@ void Show_Board()
 				printf("0");
 			}else if(Current_Board[i][j] == 1)
 			{
+
 				printf("X");
-			}else{
+			}else if(Current_Board[i][j] == -1){
+
 				printf(".");
 			}
 		}
 		printf("\n");
 	}
 
-	//”Õ”Ô†•\¦
+	//ç›¤ç•ªå·è¡¨ç¤º
 	printf("0123456789AB\n");
+	if(Current_Board[11][0] == -1)
+	{
+		printf("%d %d\n",Current_Board[0][11],Current_Board[11][0]);
+	}
+
 
 }
 
-//Ÿ”s”»’èˆø”‚Í‚Ç‚¿‚ç‚Ìƒ^[ƒ“‚Åjudge‚µ‚Ä‚¢‚é‚©(0,1‚Å‹æ•Ê‚µ‚Ä‚¢‚é‚à‚Ì)
+//å‹æ•—åˆ¤å®šå¼•æ•°ã¯ã©ã¡ã‚‰ã®ã‚¿ãƒ¼ãƒ³ã§judgeã—ã¦ã„ã‚‹ã‹(0,1ã§åŒºåˆ¥ã—ã¦ã„ã‚‹ã‚‚ã®)
 int Game_Judge(int which)
 {
-	int i=0,j=0;//ƒ‹[ƒv§Œä•Ï”
+	int i=0,j=0;//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
 
-	//Ÿ”s”»’è c‰¡Î‚ß‚É4‚Â‚»‚ë‚Á‚½‚çI—¹
-	//‰E‰¡•ûŒü
+	//å‹æ•—åˆ¤å®š ç¸¦æ¨ªæ–œã‚ã«4ã¤ãã‚ã£ãŸã‚‰çµ‚äº†
+	//å³æ¨ªæ–¹å‘
 
 			for(i=0;i<Size;i++)
 			{
@@ -463,7 +555,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//¶‰¡•ûŒü
+			//å·¦æ¨ªæ–¹å‘
 			for(i=0;i<Size;i++)
 			{
 				for(j=Size-1;j>4;j-=1)
@@ -473,7 +565,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//ã•ûŒü
+			//ä¸Šæ–¹å‘
 			for(i=Size-1;i>Size-3;i-=1)
 			{
 				for(j=0;j<Size;j++)
@@ -483,7 +575,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//‰º•ûŒü
+			//ä¸‹æ–¹å‘
 			for(i=0;i<Size-3;i++)
 			{
 				for(j=0;j<Size;j++)
@@ -493,7 +585,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//‰Eã•ûŒü
+			//å³ä¸Šæ–¹å‘
 			for(i=Size-1;i>Size-3;i-=1)
 			{
 				for(j=0;j<Size-3;j++)
@@ -503,7 +595,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//¶ã•ûŒü
+			//å·¦ä¸Šæ–¹å‘
 			for(i=Size-1;i>Size-3;i-=1)
 			{
 				for(j=Size-1;j>3;j-=1)
@@ -513,7 +605,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//‰E‰º•ûŒü
+			//å³ä¸‹æ–¹å‘
 			for(i=0;i<Size-3;i++)
 			{
 				for(j=0;j<Size-3;j++)
@@ -523,7 +615,7 @@ int Game_Judge(int which)
 					return;
 				}
 			}
-			//¶‰º•ûŒü
+			//å·¦ä¸‹æ–¹å‘
 			for(i=0;i<Size-3;i++)
 			{
 				for(j=Size-1;j>Size-3;j-=1)
@@ -538,7 +630,7 @@ int Game_Judge(int which)
 
 	
 
-	//ˆø‚«•ª‚¯”»’èŠÖ”‚É”ò‚Î‚·
+	//å¼•ãåˆ†ã‘åˆ¤å®šé–¢æ•°ã«é£›ã°ã™
 			if(Game_End_Flag != 0 && Game_End_Flag != 1)
 				Game_End_Flag = Game_Judge_Draw();
 
@@ -546,43 +638,43 @@ int Game_Judge(int which)
 
 int Game_Judge_Draw()
 {
-	//ƒ‹[ƒv§Œä•Ï”
+	//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
 	int i,j;
 
-	//”Õ–Ê‘S‚Ä‚ğŒ©‚é
+	//ç›¤é¢å…¨ã¦ã‚’è¦‹ã‚‹
 	for(i=0;i<Size;i++)
 	{
 		for(j=0;j<Size;j++)
 		{
-			if(Current_Board[i][j] == -1)//‚Ğ‚Æ‚Â‚Å‚à‹ó‚«‚ª‚ ‚ê‚ÎƒQ[ƒ€‘±s
-				return 10;//Game_End_Flag‚Ì‰Šú’l‚ğ•Ô‚µ‚Ä‚¨‚­
+			if(Current_Board[i][j] == -1)//ã²ã¨ã¤ã§ã‚‚ç©ºããŒã‚ã‚Œã°ã‚²ãƒ¼ãƒ ç¶šè¡Œ
+				return 10;//Game_End_Flagã®åˆæœŸå€¤ã‚’è¿”ã—ã¦ãŠã
 
 		}
 
 
 	}
 
-	//‘S‚Ä‘–¸‚µ‚½Œ‹‰Ê‹ó‚ª‚È‚¢ê‡(-1‚ª‚Ğ‚Æ‚Â‚à‚È‚¢)ˆø‚«•ª‚¯‚ğ¦‚·’l‚ğ•Ô‚·
+	//å…¨ã¦èµ°æŸ»ã—ãŸçµæœç©ºãŒãªã„å ´åˆ(-1ãŒã²ã¨ã¤ã‚‚ãªã„)å¼•ãåˆ†ã‘ã‚’ç¤ºã™å€¤ã‚’è¿”ã™
 	return -1;
 
 }
 
-//CPU`ƒƒCƒ“
-//4‚Â•À‚ÔèA–h‚®èAƒ~ƒjƒ}ƒbƒNƒX–@‚Ì‡‚Åè‚ğ‹‚ß‚é
+//CPU`ãƒ¡ã‚¤ãƒ³
+//4ã¤ä¸¦ã¶æ‰‹ã€é˜²ãæ‰‹ã€ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹æ³•ã®é †ã§æ‰‹ã‚’æ±‚ã‚ã‚‹
 int CPU_Turn(int which)
 {
-	int Number =  -1;//CPU‘¤‚Ìè(‰Šú’l‚Åè‚Æ‚µ‚Ä‚Ó‚³‚í‚µ‚­‚È‚¢’l‚ğ“ü‚ê‚Ä‚¨‚­)
-	int i,j;//ƒ‹[ƒv§Œä•Ï”
+	int Number =  -1;//CPUå´ã®æ‰‹(åˆæœŸå€¤ã§æ‰‹ã¨ã—ã¦ãµã•ã‚ã—ããªã„å€¤ã‚’å…¥ã‚Œã¦ãŠã)
+	int i,j;//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
 
-	//è‚ªŒˆ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡
+	//æ‰‹ãŒæ±ºå®šã•ã‚Œã¦ã„ãªã„å ´åˆ
 	if(CPU_Decision == 0)
 	{
-		//4‚Â•À‚ÔèCPU‚ª’Pƒ‚ÉŸ‚ÂêŠ‚ğ’T‚·
+		//4ã¤ä¸¦ã¶æ‰‹CPUãŒå˜ç´”ã«å‹ã¤å ´æ‰€ã‚’æ¢ã™
 		Number = Find_Vic_Def_Point(1);
 		
 		if(Number != -1)
 		{
-			//è‚ªŒˆ’è‚µ‚½‚çƒtƒ‰ƒOƒZƒbƒg‚µ‚Ä‚¨‚­
+			//æ‰‹ãŒæ±ºå®šã—ãŸã‚‰ãƒ•ãƒ©ã‚°ã‚»ãƒƒãƒˆã—ã¦ãŠã
 			CPU_Decision = 1;
 		}
 
@@ -591,14 +683,14 @@ int CPU_Turn(int which)
 	if(CPU_Decision == 0 )
 	{
 		
-		//•À‚Ô‚±‚Æ‚ğ–h‚®è(‘Šè(”’)‚ª’u‚¢‚ÄŸ‚ÂêŠ‚ğ’T‚µA‚»‚±‚É©•ª‚ÌŒ³‚ÌF‚ğ’u‚¢‚Ä–h‚®‚±‚Æ‚Æ‚·‚é)
+		//ä¸¦ã¶ã“ã¨ã‚’é˜²ãæ‰‹(ç›¸æ‰‹(ç™½)ãŒç½®ã„ã¦å‹ã¤å ´æ‰€ã‚’æ¢ã—ã€ãã“ã«è‡ªåˆ†ã®å…ƒã®è‰²ã‚’ç½®ã„ã¦é˜²ãã“ã¨ã¨ã™ã‚‹)
 		Number = Find_Vic_Def_Point(0);
 				
 		if(Number != -1)
 		{
-			//è‚ªŒˆ’è‚µ‚½‚çƒtƒ‰ƒOƒZƒbƒg‚µ‚Ä‚¨‚­
+			//æ‰‹ãŒæ±ºå®šã—ãŸã‚‰ãƒ•ãƒ©ã‚°ã‚»ãƒƒãƒˆã—ã¦ãŠã
 			CPU_Decision = 1;
-			//–h‚®ê‡AŸ—˜ƒtƒ‰ƒO‚Í10‚É–ß‚µ‚Ä‚¨‚­
+			//é˜²ãå ´åˆã€å‹åˆ©ãƒ•ãƒ©ã‚°ã¯10ã«æˆ»ã—ã¦ãŠã
 			Game_End_Flag = 10;
 		}
 
@@ -607,15 +699,17 @@ int CPU_Turn(int which)
 	if(CPU_Decision == 0)
 	{
 
+		
+
 	
-		//ƒ~ƒjƒ}ƒbƒNƒX
+		//ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹
 		
 		/*------------------------------------------------------------------------*/
-		//ƒm[ƒh0‚Ì‰Šú‰»
-		Use_Game_Tree[0].State_Number = 0;//‘JˆÚæƒm[ƒh”z—ñ§Œä•Ï”‰Šú‰»
-		Use_Game_Tree[0].This_Node_Depth = 0;//[‚³î•ñ‚ğ‘‚«
-		Use_Game_Tree[0].This_Node_Parent = -1;//ŠJnƒm[ƒh‚Ìe‚Í–³‚µ‚Æ‚µ-1‚Å•\‚·
-		//ƒm[ƒh0‚ÉCurrent_Boardî•ñ‚ğƒRƒs[
+		//ãƒãƒ¼ãƒ‰0ã®åˆæœŸåŒ–
+		Use_Game_Tree[0].State_Number = 0;//é·ç§»å…ˆãƒãƒ¼ãƒ‰é…åˆ—åˆ¶å¾¡å¤‰æ•°åˆæœŸåŒ–
+		Use_Game_Tree[0].This_Node_Depth = 0;//æ·±ã•æƒ…å ±ã‚’æ›¸ãè¾¼
+		Use_Game_Tree[0].This_Node_Parent = -1;//é–‹å§‹ãƒãƒ¼ãƒ‰ã®è¦ªã¯ç„¡ã—ã¨ã—-1ã§è¡¨ã™
+		//ãƒãƒ¼ãƒ‰0ã«Current_Boardæƒ…å ±ã‚’ã‚³ãƒ”ãƒ¼
 		for(i=0;i<Size;i++)
 		{
 			for(j=0;j<Size;j++)
@@ -625,53 +719,69 @@ int CPU_Turn(int which)
 		}
 		/*------------------------------------------------------------------------*/
 
+		//Nodeé…åˆ—åˆæœŸåŒ–
+		for(i=0;i<Game_Tree_Size;i++)
+			Node[i] = -1;
 
-		//ƒQ[ƒ€–Øì¬
+
+		//ã‚²ãƒ¼ãƒ æœ¨ä½œæˆ
 		Create_Child_Node(0);
 
 
 
-		//ƒ~ƒjƒ}ƒbƒNƒX–@Às
+		//ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹æ³•å®Ÿè¡Œ
 		Number = Min_Max();
 	
-		//è‚ªŒˆ’è‚µ‚½‚çƒtƒ‰ƒOƒZƒbƒg‚µ‚Ä‚¨‚­
+		//æ‰‹ãŒæ±ºå®šã—ãŸã‚‰ãƒ•ãƒ©ã‚°ã‚»ãƒƒãƒˆã—ã¦ãŠã
 		CPU_Decision = 1;
 
-		//è‚ğ‹‚ßI‚í‚Á‚½‚çƒƒ‚ƒŠ‚ÍŠJ•ú‚µ‚Ä‚¨‚­
+		//æ‰‹ã‚’æ±‚ã‚çµ‚ã‚ã£ãŸã‚‰ãƒ¡ãƒ¢ãƒªã¯é–‹æ”¾ã—ã¦ãŠã
 	//	free(Use_Game_Tree);
 	
 	}
 
 
-		//è‚ğ•Ô‚·
+	//åˆæœŸåŒ–
+	Next_Parent_Node = 0;
+	Node_Number = 0;
+	Next_Node_Flag = 0;
+	Current_Depth = 0;
+	/*
+	//ãƒ¡ãƒ¢ãƒªé–‹æ”¾(æ¬¡ã®ç‚ºã®åˆæœŸåŒ–)
+	free(Use_Game_Tree);
+	free(Evaluation_Value);
+	free(Node);
+	*/
+	
+		//æ‰‹ã‚’è¿”ã™
 		return Number;
 
 
 
 }
 
-//eƒm[ƒh‚©‚çqƒm[ƒh‚ğè”‚Ì”‚¾‚¯“WŠJ‚·‚éŠÖ”
+//è¦ªãƒãƒ¼ãƒ‰ã‹ã‚‰å­ãƒãƒ¼ãƒ‰ã‚’æ‰‹æ•°ã®æ•°ã ã‘å±•é–‹ã™ã‚‹é–¢æ•°
 int Create_Child_Node(int Parent_Node_Number)
 {
 	int i,j;
 
 
-	//Ÿ‚Ì[‚³‚Ì“WŠJŠJnƒm[ƒh”Ô†‚ğZo‚·‚é(V‚µ‚¢[‚³‚É“Ë“ü‚µ‚½‰‚ß‚Ìˆê‰ñ–Ú‚¾‚¯
+	//æ¬¡ã®æ·±ã•ã®å±•é–‹é–‹å§‹ãƒãƒ¼ãƒ‰ç•ªå·ã‚’ç®—å‡ºã™ã‚‹(æ–°ã—ã„æ·±ã•ã«çªå…¥ã—ãŸåˆã‚ã®ä¸€å›ç›®ã ã‘
 	if(Next_Node_Flag == 0)
 	{
 		Next_Parent_Node = Parent_Node_Number + pow((double)Size,(double)Current_Depth);
 	//	printf("Next Parent:%d\n",Next_Parent_Node);
-		Next_Node_Flag = 1;//ƒƒbƒN
+		Next_Node_Flag = 1;//ãƒ­ãƒƒã‚¯
 	}
 
-	//—×“¯m‚Ìƒm[ƒh”Ô†‚ª“¯‚¶e‚ğ‚Â‚©‚Ç‚¤‚©‚ğ”»’è
-	//ˆÙ‚È‚ê‚Î[‚³‚Ì‹æØ‚è‚Æ‚È‚èAI—¹”»’è‚ª“ü‚é
+	//éš£åŒå£«ã®ãƒãƒ¼ãƒ‰ç•ªå·ãŒåŒã˜è¦ªã‚’æŒã¤ã‹ã©ã†ã‹ã‚’åˆ¤å®š
+	//ç•°ãªã‚Œã°æ·±ã•ã®åŒºåˆ‡ã‚Šã¨ãªã‚Šã€çµ‚äº†åˆ¤å®šãŒå…¥ã‚‹
 	if(Parent_Node_Number > 0
 		&& Use_Game_Tree[Parent_Node_Number - 1].This_Node_Parent != Use_Game_Tree[Parent_Node_Number].This_Node_Parent
 		 && Current_Depth == Depth)
 	{
 
-	//		printf("I—¹\n");
+	//		printf("çµ‚äº†\n");
 
 			return 0;
 
@@ -679,33 +789,34 @@ int Create_Child_Node(int Parent_Node_Number)
 
 	}else{
 
-		//—×“¯m‚Ìƒm[ƒh‚ª“¯‚¶e‚ğ‚¿A‚Ü‚¾[‚³‚ª’B‚µ‚Ä‚¢‚È‚¢ê‡Aqƒm[ƒh‚©‚ç‚³‚ç‚É[‚­“WŠJ‚·‚é
+		//éš£åŒå£«ã®ãƒãƒ¼ãƒ‰ãŒåŒã˜è¦ªã‚’æŒã¡ã€ã¾ã æ·±ã•ãŒé”ã—ã¦ã„ãªã„å ´åˆã€å­ãƒãƒ¼ãƒ‰ã‹ã‚‰ã•ã‚‰ã«æ·±ãå±•é–‹ã™ã‚‹
 		
-			//eƒm[ƒh‚©‚ç•—Dæ“I‚Éè”‚¾‚¯ƒm[ƒh‚ğ“WŠJ‚·‚é
-			for(i=0;i<Size;i++)
+			//è¦ªãƒãƒ¼ãƒ‰ã‹ã‚‰å¹…å„ªå…ˆçš„ã«æ‰‹æ•°ã ã‘ãƒãƒ¼ãƒ‰ã‚’å±•é–‹ã™ã‚‹
+		for(i=0;i<Size;i++)
 			{
-				//ƒm[ƒh“WŠJeî•ñ•t‰Á‚à•K{
+				//ãƒãƒ¼ãƒ‰å±•é–‹è¦ªæƒ…å ±ä»˜åŠ ã‚‚å¿…é ˆ
 				Node_Number++;
-				//eƒm[ƒh‚Ì‘JˆÚæ‚ğXV
+				//è¦ªãƒãƒ¼ãƒ‰ã®é·ç§»å…ˆã‚’æ›´æ–°
 				Use_Game_Tree[Parent_Node_Number].State_Node[Use_Game_Tree[Parent_Node_Number].State_Number] = Node_Number;
 				Use_Game_Tree[Parent_Node_Number].State_Number++;
-				//“WŠJ‚³‚ê‚½q‚Éî•ñ’Ç‰Á‚Æ‰Šú‰»
+				//å±•é–‹ã•ã‚ŒãŸå­ã«æƒ…å ±è¿½åŠ ã¨åˆæœŸåŒ–
 				Use_Game_Tree[Node_Number].This_Node_Parent = Parent_Node_Number;
 				Use_Game_Tree[Node_Number].State_Number = 0;
 				Use_Game_Tree[Node_Number].This_Node_Depth = Current_Depth + 1;
+				Use_Game_Tree[Node_Number].State_Hand = i;
 				//printf("%d\n",Use_Game_Tree[Node_Number].This_Node_Depth);
 				for(j=0;j<Size;j++)
 				{
-					//‘JˆÚæƒm[ƒh”Ô†‚ğ-1‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+					//é·ç§»å…ˆãƒãƒ¼ãƒ‰ç•ªå·ã‚’-1ã§åˆæœŸåŒ–ã—ã¦ãŠã
 					Use_Game_Tree[Node_Number].State_Node[j] = -1;
 				}
 				
-				//ì¬‚µ‚½ƒm[ƒhî•ñ‚Ì‹Šo‰»
-		//		printf("ì¬ƒm[ƒh%d\neƒm[ƒh%d\n‘JˆÚè%d\n",Node_Number,Parent_Node_Number,i);
-				//Œ»İ‚Ì”Õ–Ê‚ÌƒRƒs[
+				//ä½œæˆã—ãŸãƒãƒ¼ãƒ‰æƒ…å ±ã®è¦–è¦šåŒ–
+			//	printf("ä½œæˆãƒãƒ¼ãƒ‰%d\nè¦ªãƒãƒ¼ãƒ‰%d\né·ç§»æ‰‹%d\n",Node_Number,Parent_Node_Number,i);
+				//ç¾åœ¨ã®ç›¤é¢ã®ã‚³ãƒ”ãƒ¼
 				Board_Copy(Node_Number);
-				//‚±‚Ìƒm[ƒh‚Ì”Õ–Êî•ñ\’z‚Æ•\¦
-				if(Current_Depth % 2 != 0)//[‚³Šï”‚Å”’’u‚«
+				//ã“ã®ãƒãƒ¼ãƒ‰ã®ç›¤é¢æƒ…å ±æ§‹ç¯‰ã¨è¡¨ç¤º
+				if(Current_Depth % 2 != 0)//æ·±ã•å¥‡æ•°ã§ç™½ç½®ã
 				{
 					Create_Board(i,1,Node_Number);
 
@@ -717,10 +828,10 @@ int Create_Child_Node(int Parent_Node_Number)
 			}
 
 
-			//e‚ÌØ‚è‘Ö‚í‚èƒ|ƒCƒ“ƒg
+			//è¦ªã®åˆ‡ã‚Šæ›¿ã‚ã‚Šãƒã‚¤ãƒ³ãƒˆ
 			if(Parent_Node_Number != Next_Parent_Node - 1)
 			{
-			//Ÿ‚Ìeƒm[ƒhî•ñ‚ğ‰Šú‰»‚µ‚Ä‚¨‚­
+			//æ¬¡ã®è¦ªãƒãƒ¼ãƒ‰æƒ…å ±ã‚’åˆæœŸåŒ–ã—ã¦ãŠã
 				Use_Game_Tree[Parent_Node_Number + 1].State_Number = 0;
 				Create_Child_Node(Parent_Node_Number + 1);
 			
@@ -728,8 +839,8 @@ int Create_Child_Node(int Parent_Node_Number)
 				
 	
 				Current_Depth++;
-				Next_Node_Flag = 0;//ƒtƒ‰ƒOƒŠƒZƒbƒg
-				//ƒm[ƒhî•ñ‰Šú‰»ˆ—
+				Next_Node_Flag = 0;//ãƒ•ãƒ©ã‚°ãƒªã‚»ãƒƒãƒˆ
+				//ãƒãƒ¼ãƒ‰æƒ…å ±åˆæœŸåŒ–å‡¦ç†
 				
 				Use_Game_Tree[Next_Parent_Node].State_Number = 0;
 				Create_Child_Node(Next_Parent_Node);
@@ -744,67 +855,220 @@ int Create_Child_Node(int Parent_Node_Number)
 	return 0;
 }
 
-//•]‰¿ŠÖ”ˆø”:Fi1:•0:”’j:•]‰¿’l‚ğ‹‚ß‚éƒm[ƒh”Ô†:”Õ–Êƒ‰ƒxƒ‹‚Ì‰¡:”Õ–Êƒ‰ƒxƒ‹‚Ìc
+//è©•ä¾¡é–¢æ•°å¼•æ•°:è‰²ï¼ˆ1:é»’0:ç™½ï¼‰:è©•ä¾¡å€¤ã‚’æ±‚ã‚ã‚‹ãƒãƒ¼ãƒ‰ç•ªå·:ç›¤é¢ãƒ©ãƒ™ãƒ«ã®æ¨ª:ç›¤é¢ãƒ©ãƒ™ãƒ«ã®ç¸¦
 int Evaluation_Fanction(int which,int node_number,int Board_Label_Wide,int Board_Label_Height)
 {
-
+	//è‰²ã®æ•°
 	int Collor_Count = 1;
-	//’u‚©‚ê‚½êŠ‚ğ’†S‚É^ã‚ğœ‚­7‹ß–T‚É‘Î‚µA“¯‚¶F‚ª‚¢‚­‚Â‚ ‚é‚©‚ğŒ©‚é
+	//å„æ–¹å‘ã«3ã¤ãã‚ã†ã“ã¨ãŒã‚ã‹ã£ãŸå ´åˆã€ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã—ã€è©•ä¾¡å€¤ã‚’ä¸Šæ˜‡ã•ã›ã‚‹
+	int R = 0;//å³
+	int R_U = 0;//å³ä¸Š
+	int R_D = 0;//å³ä¸‹
 
-	//ƒ{[ƒhƒ‰ƒxƒ‹11(B)–¢–‘ÎÛ
-	if(Board_Label_Wide != Size - 1)
+	int L = 0;//å·¦
+	int L_U = 0;//å·¦ä¸Š
+	int L_D = 0;//å·¦ä¸‹
+
+	int U = 0;//ä¸Š
+	int D = 0;//ä¸‹
+
+	//ç½®ã„ãŸå ´æ‰€ã®ç¸¦æ¨ªã‹ã‚‰ç›¤é¢ã‚’èª­ã‚ã‚‹ã‹ã©ã†ã‹
+
+
+	//å³ä¸Š2
+	if(Board_Label_Wide > Size - 1 && Board_Label_Height > 1)
 	{
-		//‰Eã
 		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height - 1][Board_Label_Wide + 1] == which)
 		{
-			Collor_Count += 1;
+			Collor_Count+=25;
+			//å³ä¸Š3
+			if(Board_Label_Wide > Size - 2 && Board_Label_Height > 1)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height - 2][Board_Label_Wide + 2] == which)
+				{
+					Collor_Count+=500;
+					R_U = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
+
+				}
+			}
 		}
-		//‰E
-		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height][Board_Label_Wide + 1] == which)
-		{
-			Collor_Count += 1;
-		}
-		//‰E‰º
+	}
+
+	//å³ä¸‹2
+	if(Board_Label_Wide > Size - 1 && Board_Label_Height >= 0)
+	{
 		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 1][Board_Label_Wide + 1] == which)
 		{
-			Collor_Count += 1;
-		}
+			Collor_Count+=25;
+			//å³ä¸‹3
+			if(Board_Label_Wide > Size - 2 && Board_Label_Height >=0)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 2][Board_Label_Wide + 2] == which)
+				{
+					Collor_Count+=500;
+					R_D = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
 
+				}
+			}
+		}
 	}
 
-	//ƒXƒ^ƒbƒNƒ|ƒCƒ“ƒ^1ˆÈã‘ÎÛ
-	if(Board_Label_Height > 0)
+	/************************************************************************/
+		//å·¦ä¸Š2
+	if(Board_Label_Wide > 0 && Board_Label_Height > 1)
 	{
-		//‰º
-		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 1][Board_Label_Wide] == which)
-		{
-			Collor_Count += 1;
-		}
-
-	}
-
-	//ƒ{[ƒhƒ‰ƒxƒ‹1ˆÈã‘ÎÛ
-	if(Board_Label_Wide != 0)
-	{
-		//¶‰º
-		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 1][Board_Label_Wide - 1] == which)
-		{
-			Collor_Count += 1;
-		}
-		//¶
-		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height][Board_Label_Wide - 1] == which)
-		{
-			Collor_Count += 1;
-		}
-		//¶ã
 		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height - 1][Board_Label_Wide - 1] == which)
 		{
-			Collor_Count += 1;
-		}
+			Collor_Count+=25;
+			//å·¦ä¸Š3
+			if(Board_Label_Wide > 1 && Board_Label_Height > 1)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height - 2][Board_Label_Wide - 2] == which)
+				{
+					Collor_Count+=500;
+					L_U = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
 
+				}
+			}
+		}
 	}
 
-	//’u‚¢‚½ü‚è‚É‚¢‚­‚Â“¯‚¶F‚ª‚ ‚Á‚½‚©‚ğ•Ô‚·
+
+
+	//å·¦ä¸‹2
+	if(Board_Label_Wide > 0 && Board_Label_Height >= 0)
+	{
+		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 1][Board_Label_Wide - 1] == which)
+		{
+			Collor_Count+=25;
+			//å·¦ä¸‹3
+			if(Board_Label_Wide > 1 && Board_Label_Height >= 0)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 2][Board_Label_Wide - 2] == which)
+				{
+					Collor_Count+=500;
+					R_D = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
+
+				}
+			}
+		}
+	}
+	
+	/************************************************************************/
+
+
+	//ä¸Š2
+	if(Board_Label_Height > 0)
+	{
+		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height - 1][Board_Label_Wide] == which)
+		{
+			Collor_Count+=25;
+			//ä¸Š3
+			if(Board_Label_Height > 1)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height - 2][Board_Label_Wide] == which)
+				{
+					Collor_Count+=500;
+					U = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
+
+				}
+			}
+		}
+	}
+
+
+
+	//ä¸‹2
+	if(Board_Label_Height < Size - 1)
+	{
+		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 1][Board_Label_Wide] == which)
+		{
+			Collor_Count+=25;
+			//ä¸‹3
+			if(Board_Label_Height < Size - 2)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height + 2][Board_Label_Wide] == which)
+				{
+					Collor_Count+=500;
+					D = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
+
+				}
+			}
+		}
+	}
+	
+	/************************************************************************/
+
+		//å³2
+	if(Board_Label_Wide > Size - 1)
+	{
+		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height][Board_Label_Wide + 1] == which)
+		{
+			Collor_Count+=25;
+			//å³3
+			if(Board_Label_Wide > Size - 2)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height][Board_Label_Wide + 2] == which)
+				{
+					Collor_Count+=500;
+					R = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
+
+				}
+			}
+		}
+	}
+
+
+
+	//å·¦2
+	if(Board_Label_Wide > 0)
+	{
+		if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height][Board_Label_Wide - 1] == which)
+		{
+			Collor_Count+=25;
+			//å·¦3
+			if(Board_Label_Wide > 1)
+			{
+				if(Use_Game_Tree[node_number].This_Node_Board_Info[Board_Label_Height][Board_Label_Wide - 2] == which)
+				{
+					Collor_Count+=500;
+					L = 1;//å³ä¸Šã«3ã¤ã‚ã‚‹ã“ã¨ã‚’è¨˜æ†¶
+
+				}
+			}
+		}
+	}
+	
+
+	//3ã¤ä¸¦ã³ãƒ•ãƒ©ã‚°ã®æ•°ã«å¿œã˜ã¦ã‚¹ã‚³ã‚¢åŠ ç®—
+	if(R_U == 1)
+		Collor_Count += 7500;
+
+	if(R_D == 1)
+		Collor_Count += 7500;
+
+	if(L_U == 1)
+		Collor_Count += 7500;
+
+	if(L_D == 1)
+		Collor_Count += 7500;
+
+	if(U == 1)
+		Collor_Count += 5000;
+
+	if(D == 1)
+		Collor_Count += 5000;
+
+	if(R == 1)
+		Collor_Count += 10000;
+
+	if(L == 1)
+		Collor_Count += 10000;
+		
+
+
+	//ç½®ã„ãŸå‘¨ã‚Šã«ã„ãã¤åŒã˜è‰²ãŒã‚ã£ãŸã‹ã‚’è¿”ã™
+//	printf("EV=%d\n",Collor_Count);
 	return Collor_Count;
 
 
@@ -812,21 +1076,26 @@ int Evaluation_Fanction(int which,int node_number,int Board_Label_Wide,int Board
 
 
 
-//ƒ~ƒjƒ}ƒbƒNƒX–@:ˆø”Ÿ‚Ìeƒm[ƒh”Ô†:‚Ç‚Á‚¿‚ª” ‚ğ‰­”Ô‚É‚È‚Á‚Ä‚¢‚é‚©
+//ãƒŸãƒ‹ãƒãƒƒã‚¯ã‚¹æ³•:å¼•æ•°æ¬¡ã®è¦ªãƒãƒ¼ãƒ‰ç•ªå·:ã©ã£ã¡ãŒç®±ã‚’å„„ç•ªã«ãªã£ã¦ã„ã‚‹ã‹
 int Min_Max()
 {
-	//ƒ‹[ƒv§Œä•Ï”
+	//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
 	int i,j;
-	int Start_Node_Number = 1;//Å‘å[‚³‚ÌÅ¬ƒm[ƒh”Ô†
-	int Node_Number_Temp = 0;//•]‰¿’l‚ğŠi”[‚·‚é‚½‚ßAƒm[ƒh”Ô†‚ğˆê•Û‘¶‚µ‚Ä‚¨‚­
-	int Current_Parent;//Œ»İ•]‰¿’l‚ğ‹‚ß‚Ä‚¢‚ée‚Ìƒm[ƒh”Ô†
-	int Node[Game_Tree_Size];//ƒm[ƒh‚ÌÅ‘å”•ª‚Ì”z—ñ‚ğ—eˆÕ(”O‚Ì‚½‚ß“®“IŠm•Û)
+	int Start_Node_Number = 1;//æœ€å¤§æ·±ã•ã®æœ€å°ãƒãƒ¼ãƒ‰ç•ªå·
+	int Node_Number_Temp = 0;//è©•ä¾¡å€¤ã‚’æ ¼ç´ã™ã‚‹ãŸã‚ã€ãƒãƒ¼ãƒ‰ç•ªå·ã‚’ä¸€æ™‚ä¿å­˜ã—ã¦ãŠã
+	int Current_Parent;//ç¾åœ¨è©•ä¾¡å€¤ã‚’æ±‚ã‚ã¦ã„ã‚‹è¦ªã®ãƒãƒ¼ãƒ‰ç•ªå·
+
+	/***æ¯”è¼ƒç”¨å¤‰æ•°***/
 	int Comp_Node_Number = 0;
 	int Comp_Node_Ev = 0;
-	int Sarch_Depth = Depth;//•]‰¿’l‚ğ‹‚ß‚éq‚Ì[‚³
-	int Sarch_Node_Number;//Comp_Node_Number+1‚ğŠi”[‚µAƒ‹[ƒv‚ÌŠJn’l‚ğw’è‚·‚é
+	/****************/
 
-	//step1:Å‘å[‚³‚ÌÅ¬ƒm[ƒh”Ô†‚ğæ“¾
+	int Sarch_Depth = Depth;//è©•ä¾¡å€¤ã‚’æ±‚ã‚ã‚‹å­ã®æ·±ã•
+	int Sarch_Node_Number;//Comp_Node_Number+1ã‚’æ ¼ç´ã—ã€ãƒ«ãƒ¼ãƒ—ã®é–‹å§‹å€¤ã‚’æŒ‡å®šã™ã‚‹
+	int Hand = 0;//æœ€çµ‚çš„ã«è¿”ã™æ‰‹
+
+
+	//step1:æœ€å¤§æ·±ã•ã®æœ€å°ãƒãƒ¼ãƒ‰ç•ªå·ã‚’å–å¾—
 //	printf("Step1\n");
 	while(1)
 	{
@@ -835,44 +1104,44 @@ int Min_Max()
 			Start_Node_Number = Use_Game_Tree[Start_Node_Number].State_Node[0];
 
 		}else{
-//			printf("Å‘å[‚³‚ÌÅ¬ƒm[ƒh”Ô†%d\n",Start_Node_Number);
+		//	printf("æœ€å¤§æ·±ã•ã®æœ€å°ãƒãƒ¼ãƒ‰ç•ªå·%d\n",Start_Node_Number);
 			break;
 		}
 	}
 
-	//step2:eƒm[ƒh”Ô†‚ğæ“¾
+	//step2:è¦ªãƒãƒ¼ãƒ‰ç•ªå·ã‚’å–å¾—
 //	printf("Step2\n");
 	Current_Parent = Use_Game_Tree[Start_Node_Number].This_Node_Parent;
 
 	while(1)
 	{
 
-	//step0:‰Šú‰»
+	//step0:åˆæœŸåŒ–
 	for(i=0;i<Game_Tree_Size;i++)
 	{
-		//ƒm[ƒh”z—ñ‚ğ-1‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+		//ãƒãƒ¼ãƒ‰é…åˆ—ã‚’-1ã§åˆæœŸåŒ–ã—ã¦ãŠã
 		Node[i] = -1;
 
 	}
 
-	//step3:eƒm[ƒh‚Ìqƒm[ƒh‚Ì•]‰¿’l‚ğNode”z—ñ‚ÉŠi”[
+	//step3:è¦ªãƒãƒ¼ãƒ‰ã®å­ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’Nodeé…åˆ—ã«æ ¼ç´
 //	printf("Step3\n");
 	for(i=0;i<Size;i++)
 	{
-		//eƒm[ƒh‚©‚çŠe‘JˆÚæƒm[ƒh”Ô†‚ğˆêŠm•Û
+		//è¦ªãƒãƒ¼ãƒ‰ã‹ã‚‰å„é·ç§»å…ˆãƒãƒ¼ãƒ‰ç•ªå·ã‚’ä¸€æ™‚ç¢ºä¿
 		Node_Number_Temp = Use_Game_Tree[Current_Parent].State_Node[i];
-		//‘JˆÚæƒm[ƒh‚Ì•]‰¿’l‚ğNode”z—ñ‚ÉŠi”[
+		//é·ç§»å…ˆãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’Nodeé…åˆ—ã«æ ¼ç´
 		Node[Node_Number_Temp] = Use_Game_Tree[Node_Number_Temp].This_Node_Evaluation_Value;
 
 	}
 
-	//step4:Node”z—ñ‚ğ“ª‚©‚çŒ©‚Äs‚«AÅ‰‚É—v‘f‚ª-1ˆÈŠO‚Æ‚È‚Á‚½‚Æ‚«Aƒm[ƒh”Ô†‚Æ•]‰¿’l‚ğŠi”[‚·‚é
+	//step4:Nodeé…åˆ—ã‚’é ­ã‹ã‚‰è¦‹ã¦è¡Œãã€æœ€åˆã«è¦ç´ ãŒ-1ä»¥å¤–ã¨ãªã£ãŸã¨ãã€ãƒãƒ¼ãƒ‰ç•ªå·ã¨è©•ä¾¡å€¤ã‚’æ ¼ç´ã™ã‚‹
 //	printf("Step4\n");
 	for(i=0;i<Game_Tree_Size;i++)
 	{
 		if(Node[i] != -1)
 		{
-			//ƒm[ƒh”Ô†‚Æ‚»‚Ì•]‰¿’l‚ğ‹L‰¯‚µ‚Ä‚¨‚­
+			//ãƒãƒ¼ãƒ‰ç•ªå·ã¨ãã®è©•ä¾¡å€¤ã‚’è¨˜æ†¶ã—ã¦ãŠã
 			Comp_Node_Number = i;
 			Comp_Node_Ev = Node[i];
 			break;
@@ -881,15 +1150,16 @@ int Min_Max()
 
 	}
 
-	//step5:”äŠrˆ— ƒm[ƒhŒQ‚Ì•]‰¿’l‚ÅÅ‘å(‚à‚µ‚­‚ÍÅ¬)‚Ì‚à‚Ì‚ğ’T‚·
-	//[‚³‹ô”A‚»‚Ì‚Ğ‚Æ‚Â‚µ‚½‚Ìƒm[ƒhŒQ‚©‚ç‚ÍÅ‘å‚Ì‚à‚Ì‚ğ‚Æ‚é
-	//[‚³Šï”A‚»‚Ì‚Ğ‚Æ‚Â‚µ‚½‚Ìƒm[ƒhŒR‚©‚ç‚ÍÅ¬‚Ì‚à‚Ì‚ğ‚Æ‚é
+	//step5:æ¯”è¼ƒå‡¦ç† ãƒãƒ¼ãƒ‰ç¾¤ã®è©•ä¾¡å€¤ã§æœ€å¤§(ã‚‚ã—ãã¯æœ€å°)ã®ã‚‚ã®ã‚’æ¢ã™
+	//æ·±ã•å¶æ•°æ™‚ã€ãã®ã²ã¨ã¤ã—ãŸã®ãƒãƒ¼ãƒ‰ç¾¤ã‹ã‚‰ã¯æœ€å¤§ã®ã‚‚ã®ã‚’ã¨ã‚‹
+	//æ·±ã•å¥‡æ•°æ™‚ã€ãã®ã²ã¨ã¤ã—ãŸã®ãƒãƒ¼ãƒ‰è»ã‹ã‚‰ã¯æœ€å°ã®ã‚‚ã®ã‚’ã¨ã‚‹
 //	printf("Step5\n");
+	Comp_Node_Number = 0;
 	Sarch_Node_Number = Comp_Node_Number + 1;
 	for(i=Sarch_Node_Number;i<Game_Tree_Size;i++)
 	{
 
-		//[‚³‚ª‹ô”‚ÌˆÊ’u‚É‚ ‚éƒm[ƒhŒQ‚©‚ç‚ÍÅ¬‚Ì‚à‚Ì‚ğ’T‚µo‚·(Node[i]‚ª-1‚Í’l‚ªŠi”[‚³‚ê‚Ä‚¢‚È‚¢)
+		//æ·±ã•ãŒå¶æ•°ã®ä½ç½®ã«ã‚ã‚‹ãƒãƒ¼ãƒ‰ç¾¤ã‹ã‚‰ã¯æœ€å°ã®ã‚‚ã®ã‚’æ¢ã—å‡ºã™(Node[i]ãŒ-1ã¯å€¤ãŒæ ¼ç´ã•ã‚Œã¦ã„ãªã„)
 		if(Sarch_Depth % 2 == 0)
 		{
 			if(Node[i] < Node[Comp_Node_Number] && Node[i] != -1)
@@ -900,7 +1170,7 @@ int Min_Max()
 			}
 
 		}else if(Sarch_Depth % 2 != 0 && Node[i] != -1){
-			//[‚³‚ªŠï”‚ÌˆÊ’u‚É‚ ‚éƒm[ƒhŒQ‚©‚ç‚ÍÅ‘å‚Ì‚à‚Ì‚ğ’T‚µo‚·
+			//æ·±ã•ãŒå¥‡æ•°ã®ä½ç½®ã«ã‚ã‚‹ãƒãƒ¼ãƒ‰ç¾¤ã‹ã‚‰ã¯æœ€å¤§ã®ã‚‚ã®ã‚’æ¢ã—å‡ºã™
 			if(Node[i] > Node[Comp_Node_Number])
 			{
 				Comp_Node_Number = i;
@@ -913,42 +1183,51 @@ int Min_Max()
 
 
 	}
-	//step6 ‹‚ß‚ç‚ê‚½Å‘åiÅ¬j•]‰¿’l‚ğ‚Âƒm[ƒh‚Ì•]‰¿’l‚ğAeƒm[ƒh‚Ì•]‰¿’l‚É‘‚«Š·‚¦‚é
+	//step6 æ±‚ã‚ã‚‰ã‚ŒãŸæœ€å¤§ï¼ˆæœ€å°ï¼‰è©•ä¾¡å€¤ã‚’æŒã¤ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’ã€è¦ªãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã«æ›¸ãæ›ãˆã‚‹
+
+
+
 //	printf("Step6\n");
 	Use_Game_Tree[Use_Game_Tree[Comp_Node_Number].This_Node_Parent].This_Node_Evaluation_Value
 		= Use_Game_Tree[Comp_Node_Number].This_Node_Evaluation_Value;
-	//printf("ƒm[ƒh%d‚Ì•]‰¿’l‚Í%d‚ÆŒˆ’è‚µ‚Ü‚µ‚½\n",Use_Game_Tree[Comp_Node_Number].This_Node_Parent
+	//printf("ãƒãƒ¼ãƒ‰%dã®è©•ä¾¡å€¤ã¯%dã¨æ±ºå®šã—ã¾ã—ãŸ\n",Use_Game_Tree[Comp_Node_Number].This_Node_Parent
 	//	,Use_Game_Tree[Comp_Node_Number].This_Node_Evaluation_Value);
 
 	
 	if(Use_Game_Tree[Comp_Node_Number].This_Node_Parent == 0)
 	{
-	//	printf("I—¹\n");
-		//‹‚Ü‚Á‚½•]‰¿’l‚©‚çAè‚ğ’T‚·
+		//ä¸Šã®å‡¦ç†ã®æ®µéšã§ãƒãƒ¼ãƒ‰0ã¸ã®æ‰‹ã¯æ±‚ã¾ã£ã¦ã„ã‚‹ãŒã€å®Ÿéš›ã«ç½®ã‘ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹
+		//åˆã‚ã«ç½®ã‘ãªã„å ´æ‰€ã®å ´åˆã€ãã®æ‰‹ã§é·ç§»ã™ã‚‹ãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã¯0ã¨ã—ã¦ãŠã
+
+		//ãƒãƒ¼ãƒ‰0ã®é·ç§»å…ˆãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’æ”¹ã‚ã¦è¡¨ç¤º
 		for(i=0;i<Size;i++)
 		{
-			if(Use_Game_Tree[0].This_Node_Evaluation_Value ==  Use_Game_Tree[i].This_Node_Evaluation_Value)
+			if(Current_Board[0][i] == -1 && Use_Game_Tree[0].This_Node_Evaluation_Value == Use_Game_Tree[i+1].This_Node_Evaluation_Value)
 			{
-				//è‚ğ•Ô‚·
-				return i;
-
+			//	printf("ãƒãƒ¼ãƒ‰%d:è©•ä¾¡å€¤%d\n",Use_Game_Tree[0].State_Node[i],Use_Game_Tree[Use_Game_Tree[0].State_Node[i]].This_Node_Evaluation_Value);
+				return Use_Game_Tree[i + 1].State_Hand;
 			}
+
+			//printf("ç½®ã‘ã¾ã›ã‚“\n");
+
+
 		}
 
-		break;
+
+
 
 	}
 
 
 
-	//step7 eƒm[ƒh‚ğXV‚µŸ‚Ì“¯‚¶[‚³ˆÊ’u‚É‚ ‚éeƒm[ƒh‚Ì•]‰¿’l‚ğ‹‚ß‚És‚­
-	//Ÿ‚Ìe‚Í‘O‚Ìe‚Æ“¯‚¶ƒm[ƒh‚ğeƒm[ƒh‚ğ‚à‚Â‚©‚Ç‚¤‚©
+	//step7 è¦ªãƒãƒ¼ãƒ‰ã‚’æ›´æ–°ã—æ¬¡ã®åŒã˜æ·±ã•ä½ç½®ã«ã‚ã‚‹è¦ªãƒãƒ¼ãƒ‰ã®è©•ä¾¡å€¤ã‚’æ±‚ã‚ã«è¡Œã
+	//æ¬¡ã®è¦ªã¯å‰ã®è¦ªã¨åŒã˜ãƒãƒ¼ãƒ‰ã‚’è¦ªãƒãƒ¼ãƒ‰ã‚’ã‚‚ã¤ã‹ã©ã†ã‹
 	if(Use_Game_Tree[Current_Parent].This_Node_Depth == Use_Game_Tree[Current_Parent + 1].This_Node_Depth)
 	{
 		Current_Parent = Current_Parent + 1;
 
 	}else{
-		//Ÿ‚Ì[‚³‚Ìˆê”Ôá‚¢ƒm[ƒh”Ô†(¶’[‚ğZo)
+		//æ¬¡ã®æ·±ã•ã®ä¸€ç•ªè‹¥ã„ãƒãƒ¼ãƒ‰ç•ªå·(å·¦ç«¯ã‚’ç®—å‡º)
 		Start_Node_Number = 0;
 		for(i=0;i<Sarch_Depth - 1;i++)
 		{
@@ -962,61 +1241,56 @@ int Min_Max()
 
 	}
 
-    
-
-
-
-	//ÅŒã‚É‹‚ß‚½è‚ğ•Ô‚·
-	return;
+	//return;
 
 	
 	
 }
 
-//Šeƒm[ƒh‚Ì”Õ–Ê\’z(” ’u)
+//å„ãƒãƒ¼ãƒ‰ã®ç›¤é¢æ§‹ç¯‰(ç®±ç½®)
 void Create_Board(int position, int which,int node_number)
 {
-	//position:’u‚­êŠ
+	//position:ç½®ãå ´æ‰€
 	int i,j;
 
-	//ƒm[ƒh\‘¢‘Ì‚Ì”Õ–Êî•ñ‚É” ‚ğ’u‚­
+	//ãƒãƒ¼ãƒ‰æ§‹é€ ä½“ã®ç›¤é¢æƒ…å ±ã«ç®±ã‚’ç½®ã
 	for(i=0;i<Size;i++)
 	{
 		if(Use_Game_Tree[node_number].This_Node_Board_Info[i][position] != -1)
 		{
 			if(which == 0)
 			{
-				//”’’u‚«
+				//ç™½ç½®ã
 				Use_Game_Tree[node_number].This_Node_Board_Info[i-1][position] = 0;
-				//’u‚¢‚½‚ç‚»‚ÌêŠ‚©‚ç•]‰¿’l‚ğ‹‚ßA\‘¢‘Ì—v‘f‚ÉŠi”[‚·‚é
+				//ç½®ã„ãŸã‚‰ãã®å ´æ‰€ã‹ã‚‰è©•ä¾¡å€¤ã‚’æ±‚ã‚ã€æ§‹é€ ä½“è¦ç´ ã«æ ¼ç´ã™ã‚‹
 				Use_Game_Tree[node_number].This_Node_Evaluation_Value = 
 					 Evaluation_Fanction(which,node_number,position,i-1);
 				break;
 
 			}else if(which == 1){
-				//•’u‚«
+				//é»’ç½®ã
 				Use_Game_Tree[node_number].This_Node_Board_Info[i-1][position] = 1;
-				//’u‚¢‚½‚ç‚»‚ÌêŠ‚©‚ç•]‰¿’l‚ğ‹‚ßA\‘¢‘Ì—v‘f‚ÉŠi”[‚·‚é
+				//ç½®ã„ãŸã‚‰ãã®å ´æ‰€ã‹ã‚‰è©•ä¾¡å€¤ã‚’æ±‚ã‚ã€æ§‹é€ ä½“è¦ç´ ã«æ ¼ç´ã™ã‚‹
 				Use_Game_Tree[node_number].This_Node_Evaluation_Value = 
 					 Evaluation_Fanction(which,node_number,position,i-1);
 				break;
 
 			}
 		}else if(i == Size-1){
-		//’u‚­êŠ‚É‰½‚à’u‚©‚ê‚Ä‚¢‚È‚¢‚Æ‚«Aˆê”Ô‰º‚É’u‚­
+		//ç½®ãå ´æ‰€ã«ä½•ã‚‚ç½®ã‹ã‚Œã¦ã„ãªã„ã¨ãã€ä¸€ç•ªä¸‹ã«ç½®ã
 			if(which == 0)
 			{
-				//”’’u‚«
+				//ç™½ç½®ã
 				Use_Game_Tree[node_number].This_Node_Board_Info[Size-1][position] = 0;
-				//’u‚¢‚½‚ç‚»‚ÌêŠ‚©‚ç•]‰¿’l‚ğ‹‚ßA\‘¢‘Ì—v‘f‚ÉŠi”[‚·‚é
+				//ç½®ã„ãŸã‚‰ãã®å ´æ‰€ã‹ã‚‰è©•ä¾¡å€¤ã‚’æ±‚ã‚ã€æ§‹é€ ä½“è¦ç´ ã«æ ¼ç´ã™ã‚‹
 				Use_Game_Tree[node_number].This_Node_Evaluation_Value = 
 					 Evaluation_Fanction(which,node_number,position,Size-1);
 				break;
 			
 			}else if(which == 1){
-				//•’u‚«
+				//é»’ç½®ã
 				Use_Game_Tree[node_number].This_Node_Board_Info[Size-1][position] = 1;
-				//’u‚¢‚½‚ç‚»‚ÌêŠ‚©‚ç•]‰¿’l‚ğ‹‚ßA\‘¢‘Ì—v‘f‚ÉŠi”[‚·‚é
+				//ç½®ã„ãŸã‚‰ãã®å ´æ‰€ã‹ã‚‰è©•ä¾¡å€¤ã‚’æ±‚ã‚ã€æ§‹é€ ä½“è¦ç´ ã«æ ¼ç´ã™ã‚‹
 				Use_Game_Tree[node_number].This_Node_Evaluation_Value = 
 					 Evaluation_Fanction(which,node_number,position,Size-1);
 				break;
@@ -1027,7 +1301,7 @@ void Create_Board(int position, int which,int node_number)
 
 	}
 	/*
-	//‚¨‚«I‚Á‚½‚ç”Õ–Ê•\¦ƒfƒoƒbƒO
+	//ãŠãçµ‚ã£ãŸã‚‰ç›¤é¢è¡¨ç¤ºãƒ‡ãƒãƒƒã‚°
 
 	for(i = 0;i<Size;i++)
 	{
@@ -1054,14 +1328,14 @@ void Create_Board(int position, int which,int node_number)
 	}
 	*/
 
-	//ƒ‰ƒxƒ‹•\¦
+	//ãƒ©ãƒ™ãƒ«è¡¨ç¤º
 //	printf("0123456789AB\n");
-	//•]‰¿’l•\¦
-//	printf("•]‰¿’l:%d\n",Use_Game_Tree[node_number].This_Node_Evaluation_Value);
+	//è©•ä¾¡å€¤è¡¨ç¤º
+//	printf("è©•ä¾¡å€¤:%d\n",Use_Game_Tree[node_number].This_Node_Evaluation_Value);
 
 
 }
-//eƒm[ƒh‚Ì”Õ–Êî•ñ‚ğqƒm[ƒh‚ÉƒRƒs[
+//è¦ªãƒãƒ¼ãƒ‰ã®ç›¤é¢æƒ…å ±ã‚’å­ãƒãƒ¼ãƒ‰ã«ã‚³ãƒ”ãƒ¼
 int Board_Copy(int node_number)
 {
 	int i,j;
@@ -1082,19 +1356,20 @@ int Board_Copy(int node_number)
 
 }
 
-//‚Ğ‚Æ‚Â’u‚¢‚½‚Æ‚«AŸ‚ÂA‚à‚µ‚­‚Í‘Šè‚ª3‚Â‚»‚ë‚Á‚Ä‚¢‚é‚Æ‚±‚ë‚ğ•Ô‚·(ˆø”:’u‚­F •:1 ”’:0)
+//ã²ã¨ã¤ç½®ã„ãŸã¨ãã€å‹ã¤ã€ã‚‚ã—ãã¯ç›¸æ‰‹ãŒ3ã¤ãã‚ã£ã¦ã„ã‚‹ã¨ã“ã‚ã‚’è¿”ã™(å¼•æ•°:ç½®ãè‰² é»’:1 ç™½:0)
 int Find_Vic_Def_Point(int which)
 {
-	int BP = -1;//ƒ{[ƒhƒ|ƒCƒ“ƒ^[
-	int i,j;//ƒ‹[ƒv§Œä•Ï”
+	int BP = -1;//ãƒœãƒ¼ãƒ‰ãƒã‚¤ãƒ³ã‚¿ãƒ¼
+	int i,j;//ãƒ«ãƒ¼ãƒ—åˆ¶å¾¡å¤‰æ•°
+	int Current_Collor = -1;//ç›¤é¢ä¸­ã®ç¾åœ¨ã®è‰²ã‚’ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—
 
 
 	for(i=0;i<Size;i++)
 	{
-		BP = -1;//‰Šú‰»
+		BP = -1;//åˆæœŸåŒ–
 		for(j=0;j<Size;j++)
 		{
-			//”Õ–Ê‚ğŒ©‚Ä-1ˆÈŠO‚Ì‚Æ‚±‚ë‚É‚È‚Á‚½‚Æ‚«A‚»‚ÌˆêŒÂã‚ğBP‚Æ‚·‚é
+			//ç›¤é¢ã‚’è¦‹ã¦-1ä»¥å¤–ã®ã¨ã“ã‚ã«ãªã£ãŸã¨ãã€ãã®ä¸€å€‹ä¸Šã‚’BPã¨ã™ã‚‹
 			if(Current_Board[j][i] != -1)
 			{
 				BP = j;
@@ -1105,30 +1380,50 @@ int Find_Vic_Def_Point(int which)
 
 
 		}
-		//‚±‚±‚Ì’iŠK‚ÅBP‚ª-1‚Ìê‡Aˆê”Ô‰º‚Ì11‚É’u‚­‚æ‚¤‚É‚·‚é
+		//ã“ã“ã®æ®µéšã§BPãŒ-1ã®å ´åˆã€ä¸€ç•ªä¸‹ã®11ã«ç½®ãã‚ˆã†ã«ã™ã‚‹
 		if(BP == -1)
 		{
 			BP = 11;
 		}
-
+		//ç¾åœ¨ã®è‰²ã‚’å¤‰æ•°ã«ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—
+		Current_Collor = Current_Board[BP][i];
 		Current_Board[BP][i] = which;
-		Game_Judge(which);//’u‚¢‚½‚Æ‚«Ÿ—˜‚µ‚½‚©‚Ç‚¤‚©
-		if(Game_End_Flag == 0 || Game_End_Flag == 1)//Ÿ‚Ä‚Î‚»‚ÌˆÊ’u
+		Game_Judge(which);//ç½®ã„ãŸã¨ãå‹åˆ©ã—ãŸã‹ã©ã†ã‹
+		if(Game_End_Flag == 0 || Game_End_Flag == 1)//å‹ã¦ã°ãã®ä½ç½®
 		{
-			//Ÿ—˜‚Ìê‡Aè‚ğ•Ô‚·
+		//	Current_Board[BP][i] = -1;//ä¸€åº¦ç½®ã„ãŸæ‰‹ã‚’æˆ»ã™
+			Current_Board[BP][i] = Current_Collor;
+			//å‹åˆ©ã®å ´åˆã€æ‰‹ã‚’è¿”ã™
 			return i;
-		}else{//’u‚¢‚Ä‚àŸ‚Á‚Ä‚È‚¢
-		//printf("0‚ÍŸ‚¿è‚Å‚Í‚È‚¢\n");//‰½‚à‚È‚¢ê‡‚±‚±‚Í0‚©‚ç‚‚‚Ü‚Å•\¦‚³‚ê‚é(b’è)
+		}else{//ç½®ã„ã¦ã‚‚å‹ã£ã¦ãªã„
+		//printf("0ã¯å‹ã¡æ‰‹ã§ã¯ãªã„\n");//ä½•ã‚‚ãªã„å ´åˆã“ã“ã¯0ã‹ã‚‰ï½‚ã¾ã§è¡¨ç¤ºã•ã‚Œã‚‹(æš«å®š)
+			//ãƒ­ãƒ¼ãƒ«ãƒãƒƒã‚¯
+			Current_Board[BP][i] = Current_Collor;
 		}
-		Current_Board[BP][i] = -1;//ˆê“x’u‚¢‚½è‚ğ–ß‚·
 	}
 
-	//Ÿ‚ÂêŠ‚ª‚È‚¢ê‡-1‚ğ•Ô‚µ‚Ä‚¨‚­
+	//å‹ã¤å ´æ‰€ãŒãªã„å ´åˆ-1ã‚’è¿”ã—ã¦ãŠã
 	return -1;
 
 
 }
 
+//ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿å´ã®æ‰‹ã‚’ä¹±ã«ã‚ˆã‚Šæ±ºå®šã™ã‚‹
+int Player_Random(int Min ,int Max)
+{
+	int Number;//CPUå´ã®æ‰‹
+
+	Number = Min + (int)(rand() * (Max - Min + 1.0)/(1.0 + RAND_MAX));
+
+//	printf("CPUã®æ‰‹:%d\n",Number);
+
+
+	//ç¯„å›²ä¹±æ•°å…¬å¼ä½¿ç”¨
+	return Number;
+
+
+
+}
 
 
 
